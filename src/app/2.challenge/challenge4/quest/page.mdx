@@ -1,0 +1,98 @@
+---
+title: Quest System
+---
+import Example from "@/components/docs/aincrad/quest/example"
+
+# Quest System in Sword Art Online
+
+Like many RPG games, Sword Art Online features a comprehensive quest system where guild members can post quests and adventurers can complete them for rewards. Kayaba's implementation follows specific rules to ensure fairness and efficiency.
+
+## Core Mechanics
+
+The quest system allows players to both create and undertake quests, fostering a player-driven economy and community engagement.
+
+## Quest Rules
+
+1. **Posting Limitation**
+- Each player may only have one active quest posted at any time
+
+2. **Participation Restriction**
+- Quest creators cannot participate in their own quests
+
+3. **Completion Status**
+- Each quest can only be completed once
+- Only one player can accept a quest at a time
+
+4. **Reward System**
+- Successful completion grants the specified rewards to the completing player
+- The quest creator must verify completion before rewards are distributed
+
+## Quest Flow
+
+1. Player posts a quest with defined rewards
+2. Another player accepts the quest
+3. Player completes the required tasks
+4. Quest creator verifies completion
+5. System distributes rewards to the completing player
+
+
+## Events
+
+In order to facilitate the quest system, the game uses a series of events to manage quest creation, acceptance, and completion.
+
+`event QuestCreated(uint256 id, address indexed creator, Quest quest);`
+- Emitted when a player creates a new quest
+
+`event QuestTaken(uint256 id, address indexed taker, Quest quest);`
+- Emitted when a player accepts a quest
+
+`event QuestCompleted(uint256 id, address indexed completer, Quest quest);`
+- Emitted when a player completes a quest
+
+`event QuestVerified(
+uint256 id,
+address indexed verifier,
+address indexed completer,
+Quest quest
+);`
+- Emitted when a quest creator verifies completion
+
+## Data Structures
+Quests are represented using the following struct:
+
+```solidity
+ struct Quest {
+      // Quest description
+      string description;
+      // Quest reward in wei
+      uint reward;
+      // Quest completion status
+      bool completed;
+      // Quest verification status
+      bool verified;
+      // Who completed the quest
+      address completer;
+  }
+```
+
+## Functions
+
+1. ` function createQuest(Quest memory quest) public payable`
+ - Allows a player to create a new quest with the specified reward
+2. `function takeQuest(uint questId) public`
+ - Allows a player to accept a quest
+3. `function completeQuest() public`
+  - Allows a player to complete a quest
+4. `function verifyComplete() public`
+  - Allows a quest creator to verify quest completion. Since each player can only have one active quest, the system can easily determine the quest to verify.
+
+> Why isn't there a "get all quests" function?
+> In real-world applications, quests are typically too numerous to retrieve in a single function call. Best practice is to emit events that external indexers can monitor to maintain a database of quests. This approach:
+> • Reduces blockchain storage costs
+> • Improves query performance
+> • Enables more flexible data filtering and sorting
+# Code
+
+<Example />
+
+
