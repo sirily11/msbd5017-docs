@@ -17,10 +17,17 @@ const withMDX = nextMDX({
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   pageExtensions: ['js', 'jsx', 'ts', 'tsx', 'mdx'],
+  compiler: {
+    removeConsole: {
+      exclude: ['error'],
+    },
+  },
   experimental: {
     outputFileTracingIncludes: {
-      '/**/*': ['./src/app/**/*.mdx'],
-      '/**/*': ['./node_modules/@openzeppelin/contracts/**/*.sol'],
+      '/**/*': [
+        './src/app/**/*.mdx',
+        './node_modules/@openzeppelin/contracts/**/*.sol',
+      ],
     },
   },
   webpack: (config, options) => {

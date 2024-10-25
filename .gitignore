@@ -21,3 +21,4 @@ yarn-error.log*
 .env
 .next
 src/navigation/navigation.ts
+.idea

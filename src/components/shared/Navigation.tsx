@@ -5,39 +5,15 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import clsx from 'clsx'
 import { AnimatePresence, motion, useIsPresent } from 'framer-motion'
-
-import { Button } from '@/components/shared/Button'
 import { useIsInsideMobileNavigation } from '@/components/shared/MobileNavigation'
 import { useSectionStore } from '@/components/shared/SectionProvider'
 import { Tag } from '@/components/shared/Tag'
 import { remToPx } from '@/lib/remToPx'
-
-// Assume navigation is imported from somewhere
 import { NavGroup, navigation } from '@/navigation'
-import ConnectWalletButton from './ConnectWalletButton'
 
 function useInitialValue<T>(value: T, condition = true) {
   let initialValue = useRef(value).current
   return condition ? initialValue : value
-}
-
-function TopLevelNavItem({
-  href,
-  children,
-}: {
-  href: string
-  children: React.ReactNode
-}) {
-  return (
-    <li className="md:hidden">
-      <Link
-        href={href}
-        className="block py-1 text-sm text-zinc-600 transition hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white"
-      >
-        {children}
-      </Link>
-    </li>
-  )
 }
 
 function NavLink({
@@ -53,15 +29,19 @@ function NavLink({
   active?: boolean
   isAnchorLink?: boolean
 }) {
+  const pathname = usePathname()
+  // Check both exact matches and parent route matches
+  const isActive = active || pathname.startsWith(href)
+
   return (
     <Link
       href={href}
-      aria-current={active ? 'page' : undefined}
+      aria-current={isActive ? 'page' : undefined}
       className={clsx(
         'flex justify-between gap-2 py-1 pr-3 text-sm transition',
         isAnchorLink ? 'pl-7' : 'pl-4',
-        active
-          ? 'text-zinc-900 dark:text-white'
+        isActive
+          ? 'text-green-700 dark:text-green-500'
           : 'text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white',
       )}
     >
@@ -75,64 +55,33 @@ function NavLink({
   )
 }
 
-function VisibleSectionHighlight({
-  group,
-  pathname,
-}: {
-  group: NavGroup
-  pathname: string
-}) {
-  let [sections, visibleSections] = useInitialValue(
-    [
-      useSectionStore((s) => s.sections),
-      useSectionStore((s) => s.visibleSections),
-    ],
-    useIsInsideMobileNavigation(),
-  )
-
-  let isPresent = useIsPresent()
-  let firstVisibleSectionIndex = Math.max(
-    0,
-    [{ id: '_top' }, ...sections].findIndex(
-      (section) => section.id === visibleSections[0],
-    ),
-  )
-  let itemHeight = 20
-  let height = isPresent
-    ? Math.max(1, visibleSections.length) * itemHeight
-    : itemHeight
-  let top =
-    findActiveIndex(group, pathname) * itemHeight +
-    firstVisibleSectionIndex * itemHeight
-
-  return (
-    <motion.div
-      layout
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1, transition: { delay: 0.2 } }}
-      exit={{ opacity: 0 }}
-      className="absolute inset-x-0 top-0 bg-zinc-800/2.5 will-change-transform dark:bg-white/2.5"
-      style={{ borderRadius: 8, height, top }}
-    />
-  )
-}
-
 function ActivePageMarker({
   group,
   pathname,
+  level = 0,
 }: {
   group: NavGroup
   pathname: string
+  level: number
 }) {
   let itemHeight = remToPx(2)
   let offset = remToPx(0.25)
   let activePageIndex = findActiveIndex(group, pathname)
-  let top = offset + activePageIndex * itemHeight
+  let top = offset + activePageIndex * itemHeight + level * itemHeight
+
+  // Show marker for both exact matches and parent routes
+  const shouldShowMarker =
+    activePageIndex !== -1 ||
+    group.links?.some(
+      (link) => 'href' in link && pathname.startsWith(link.href ?? ''),
+    )
+
+  if (!shouldShowMarker) return null
 
   return (
     <motion.div
       layout
-      className="absolute left-2 h-6 w-px bg-emerald-500"
+      className="absolute left-0 h-6 w-px bg-emerald-500"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1, transition: { delay: 0.2 } }}
       exit={{ opacity: 0 }}
@@ -144,13 +93,18 @@ function ActivePageMarker({
 function findActiveIndex(group: NavGroup, pathname: string): number {
   let index = 0
   for (const item of group?.links ?? []) {
-    if ('href' in item && item.href === pathname) {
-      return index
-    }
     if ('links' in item) {
+      // Check nested routes first
       const nestedIndex = findActiveIndex(item, pathname)
+      // Only return parent index if no nested match is found
       if (nestedIndex !== -1) {
+        // Return the nested index to highlight the actual active item
         return index + nestedIndex
+      }
+    } else {
+      // Check both exact match and if this is the current page's parent route
+      if (pathname === item.href || pathname.startsWith(item.href + '/')) {
+        return index
       }
     }
     index++
@@ -173,52 +127,54 @@ function NavigationGroup({
     isInsideMobileNavigation,
   )
 
-  let isActiveGroup = findActiveIndex(group, pathname) !== -1
-
   return (
     <li className={clsx('relative mt-6', className)}>
       <motion.h2
         layout="position"
         className={clsx(
-          'text-xs font-semibold text-zinc-900 dark:text-white',
+          'text-xs text-zinc-900 dark:text-white',
           level > 0 && 'ml-4',
         )}
       >
         {group.href ? (
-          <Link href={group.href} className="hover:text-green-500">
-            {group.title}
-          </Link>
+          <Link href={group.href}>{group.title}</Link>
         ) : (
           group.title
         )}
       </motion.h2>
-      <div className={clsx('relative mt-3 pl-2', level > 0 && 'ml-4')}>
-        <AnimatePresence initial={!isInsideMobileNavigation}>
-          {/* {isActiveGroup && (
-            <VisibleSectionHighlight group={group} pathname={pathname} />
-          )} */}
-        </AnimatePresence>
-        <motion.div
-          layout
-          className="absolute inset-y-0 left-2 w-px bg-zinc-900/10 dark:bg-white/5"
-        />
+      <div className={clsx('relative mt-3')}>
+        {level === 0 && (
+          <motion.div
+            layout
+            className="absolute inset-y-0 left-0 w-px bg-zinc-900/10 dark:bg-white/5"
+          />
+        )}
         <AnimatePresence initial={false}>
-          {isActiveGroup && (
-            <ActivePageMarker group={group} pathname={pathname} />
+          {level === 0 && (
+            <ActivePageMarker group={group} pathname={pathname} level={level} />
           )}
         </AnimatePresence>
-        <ul role="list" className="border-l border-transparent">
-          {group.links?.map((link, index) => (
-            <motion.li key={index} layout="position" className="relative">
-              {'href' in link ? (
-                <NavLink href={link.href ?? ''} active={link.href === pathname}>
-                  {link.title}
-                </NavLink>
-              ) : (
-                <NavigationGroup group={link} level={level + 1} />
-              )}
-            </motion.li>
-          ))}
+        <ul role="list" className="border-l border-transparent pl-2">
+          {group.links?.map((link, index) => {
+            return (
+              <motion.li key={index} layout="position" className="relative">
+                {'links' in link ? (
+                  <NavigationGroup
+                    group={link}
+                    level={level + 1}
+                    className={'!mt-1'}
+                  />
+                ) : (
+                  <NavLink
+                    href={link.href ?? ''}
+                    active={link.href === pathname}
+                  >
+                    {link.title}
+                  </NavLink>
+                )}
+              </motion.li>
+            )
+          })}
         </ul>
       </div>
     </li>
@@ -236,9 +192,6 @@ export function Navigation(props: React.ComponentPropsWithoutRef<'nav'>) {
             className={groupIndex === 0 ? 'md:mt-0' : ''}
           />
         ))}
-        <li className="sticky bottom-0 z-10 mt-6 min-[416px]:hidden">
-          {/* <ConnectWalletButton session={(props as any).session} /> */}
-        </li>
       </ul>
     </nav>
   )
