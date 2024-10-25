@@ -394,7 +394,7 @@ export default function PixelQuestSystemComponent() {
         <h1
           className={`pixel-text mb-6 text-center text-4xl font-bold text-yellow-400`}
         >
-          Pixel Quest Master
+          Sword Art Online
         </h1>
 
         <div className="wooden-frame sticky top-0 mb-4 p-4">
