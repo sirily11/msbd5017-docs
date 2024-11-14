@@ -19,7 +19,7 @@ const nextConfig = {
   pageExtensions: ['js', 'jsx', 'ts', 'tsx', 'mdx'],
   compiler: {
     removeConsole: {
-      exclude: ['error'],
+      exclude: ['error', "info"],
     },
   },
   experimental: {
