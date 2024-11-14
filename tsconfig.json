@@ -30,6 +30,6 @@
     ".next/types/**/*.ts",
     "src/mdx/mdx-menu-plugin.mjs",
     "src/mdx/mdx-menu-plugin.spec.ts"
-, "src/app/getting-started/challenge2/page.mdx"  ],
+, "src/app/getting-started/challenge2/page.mdx", "src/app/1.getting-started/5.hardhat/page.mdx"  ],
   "exclude": ["node_modules"]
 }

@@ -1,0 +1,347 @@
+import { Tutorial, Steps, Step, Output, Outputs } from '@/components/shared/tutorial'
+import { FileExplorer } from '@/components/shared/file-explorer-with-highlighting'
+import { CodeHighlighterComponent } from '@/components/shared/code-highlighter'
+import Image from 'next/image'
+import {
+  InitializedPackageJSON,
+  AfterInstallDepsPackageJSON,
+  AfterScriptPackageJSON,
+  SampleHardhatConfig, SampleTsConfig, SampleSolidityCode
+} from './samplecode'
+import { Terminal } from '@/components/shared/terminal'
+
+
+<Image
+  src="/images/getting-started/hardhat.webp"
+  alt="Hardhat logo"
+  width={1200}
+  height={1200}
+  className="mx-auto"
+/>
+In this tutorial, you'll learn how to use **Hardhat** to compile, test, and
+deploy smart contracts. Before getting started, ensure that you have
+[Node.js](https://nodejs.org/en) installed on your local machine, along with a
+code editor like **VSCode**. To have a better performance, we also use
+[pnpm](https://pnpm.io) for package management. However, a faster alternative
+like `bun` is also welcome.
+
+> **Note:** If you are on `Windows`, you may want to use `WSL` or `Git Bash` to run the commands.
+
+{/* ## Setup Hardhat project */}
+
+<Tutorial>
+  <Steps>
+    <Step>
+      Create a new folder <br />
+      ```bash mkdir hardhat-tutorial ```
+    </Step>
+    <Step outputId="1">
+      Change dir to `hardhat-tutorial` <br />
+      ```cd hardhat-tutorial ```
+    </Step>
+    <Step outputId="2">
+      Initialize a new Node.js project with a `package.json` file in it <br />
+      ```bash
+      pnpm init
+      ```
+    </Step>
+    <Step>
+      `package.json` file is the entry point for the project. It contains the
+      project's metadata and dependencies. And any folder contains a
+      `package.json` file is considered a Node.js project.
+    </Step>
+    <Step>In `package.json` file, you will see the following content:</Step>
+    <Step outputId="name">`name`: The name of the project.</Step>
+    <Step outputId="scripts">
+      `scripts`: A set of scripts that can be run using `pnpm run {script - name}`
+    </Step>
+
+    <Step>
+      In your termainal, run the following command to install Hardhat <br />
+      ```bash
+      pnpm add @nomicfoundation/hardhat-toolbox hardhat @nomicfoundation/hardhat-chai-matchers
+      @nomicfoundation/hardhat-ethers @nomicfoundation/hardhat-ignition @openzeppelin/contracts dayjs dotenv ethers
+      solidity-coverage chai@4.4.1 @types/chai
+      ```
+    </Step>
+    <Step outputId={`node_modules`}>
+      After the installation, you will see a `node_modules` folder in your project.
+      Please add this folder to your `.gitignore` file. **Do not** commit this folder to your repository.
+    </Step>
+    <Step outputId={`after-deps`}>
+      And now you will see the following content added to your `package.json` file's `dependencies` field
+    </Step>
+    <Step outputId={`after-script`}>
+      Add test, coverage and compile scripts to your `package.json` file.
+      - `test`: Run tests
+      - `coverage`: Run tests with coverage
+      - `compile`: Compile contracts
+    </Step>
+    <Step outputId={`hardhat-config`}>
+      Create a new file named `hardhat.config.ts` in the root of your project.
+      This file is the configuration file for Hardhat.
+    </Step>
+    <Step outputId={`hardhat-config-code`}>
+      Add the following code to the `hardhat.config.ts` file
+    </Step>
+    <Step>
+      `dotenv` is use for loading the private key into the system.
+      You can check [this
+      link](https://support.metamask.io/managing-my-wallet/secret-recovery-phrase-and-private-keys/how-to-export-an-accounts-private-key/)
+      to know how to export your private key from Metamask. **DO NOT** put your private key in your code and commit it
+      to the repository!!!!
+    </Step>
+    <Step outputId={`dot-env`}>
+      Create a `.env` file in the root of your project and add the following content
+    </Step>
+    <Step outputId={`dot-env-content`}>
+      Put your private key in the `.env` file
+    </Step>
+    <Step outputId={`tsconfig`}>
+      Create a file called `tsconfig.json` in the root of your project
+    </Step>
+    <Step>
+      The `tsconfig.json` file is the configuration file for TypeScript. Typescript is a superset of JavaScript that
+      adds static typing to the language. It is used to compile the TypeScript code to JavaScript.
+    </Step>
+    <Step outputId={`tsconfig-content`}>
+      Add the following content to the `tsconfig.json` file
+    </Step>
+    <Step outputId={`contract`}>
+      Create a folder named `contracts` in the root of your project and create a file named `HelloWorld.sol` in it.
+    </Step>
+    <Step outputId={`contract-content`}>
+      Add the following content to the `HelloWorld.sol` file
+    </Step>
+    <Step outputId={"compile-output"}>
+      Run the following command to compile the contract <br />
+      ```bash
+      pnpm run compile
+      ```
+    </Step>
+  </Steps>
+  <Outputs>
+    <Output id="1">
+      <FileExplorer
+        structure={{
+          'hardhat-tutorial': {
+            highlighted: true,
+          },
+        }}
+      />
+    </Output>
+    <Output id="2">
+      <FileExplorer
+        structure={{
+          'hardhat-tutorial': {
+            'package.json': {
+              highlighted: true,
+              content: null,
+            },
+          },
+        }}
+      />
+    </Output>
+    <Output id="name">
+      <CodeHighlighterComponent
+        code={InitializedPackageJSON}
+        language="json"
+        highlightLines={[2]}
+        fileName={'package.json'}
+      />
+    </Output>
+    <Output id="scripts">
+      <CodeHighlighterComponent
+        code={InitializedPackageJSON}
+        language="json"
+        highlightLines={[6, 7, 8]}
+        fileName={'package.json'}
+      />
+    </Output>
+    <Output id="node_modules">
+      <FileExplorer
+        structure={{
+          'hardhat-tutorial': {
+            'package.json': {
+              highlighted: false,
+              content: null,
+            },
+            'node_modules': {
+              highlighted: true,
+            }
+          },
+        }}
+      />
+    </Output>
+    <Output id="after-deps">
+      <CodeHighlighterComponent
+        code={AfterInstallDepsPackageJSON}
+        language={"json"}
+        highlightLines={[10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]}
+        fileName={"package.json"}
+      />
+    </Output>
+    <Output id="after-script">
+      <CodeHighlighterComponent
+        code={AfterScriptPackageJSON}
+        language={"json"}
+        highlightLines={[24, 25, 26, 27, 28]}
+        fileName={"package.json"}
+      />
+    </Output>
+    <Output id="hardhat-config">
+      <FileExplorer
+        structure={{
+          'hardhat-tutorial': {
+            'package.json': {
+              highlighted: false,
+              content: null,
+            },
+            'node_modules': {
+              highlighted: false,
+            },
+            'hardhat.config.ts': {
+              highlighted: true,
+              content: null
+            }
+          },
+        }}
+      />
+    </Output>
+    <Output id="hardhat-config-code">
+      <CodeHighlighterComponent
+        code={SampleHardhatConfig}
+        language="typescript"
+        className="max-h-[700px] overflow-x-auto"
+        fileName={"hardhat.config.ts"}
+      />
+    </Output>
+    <Output id="dot-env">
+      <FileExplorer
+        structure={{
+          'hardhat-tutorial': {
+            'package.json': {
+              highlighted: false,
+              content: null,
+            },
+            'node_modules': {
+              highlighted: false,
+            },
+            'hardhat.config.ts': {
+              highlighted: false,
+              content: null
+            },
+            '.env': {
+              highlighted: true,
+              content: null
+            }
+          },
+        }}
+      />
+    </Output>
+    <Output id="dot-env-content">
+      <CodeHighlighterComponent
+        code={`PRIVATE_KEY=YOUR_PRIVATE_KEY`}
+        language="bash"
+        fileName=".env"
+      />
+    </Output>
+    <Output id="tsconfig">
+      <FileExplorer
+        structure={{
+          'hardhat-tutorial': {
+            'package.json': {
+              highlighted: false,
+              content: null,
+            },
+            'node_modules': {
+              highlighted: false,
+            },
+            'hardhat.config.ts': {
+              highlighted: false,
+              content: null
+            },
+            '.env': {
+              highlighted: false,
+              content: null
+            },
+            "tsconfig.json": {
+              highlighted: true,
+              content: null
+            }
+          },
+        }}
+      />
+    </Output>
+    <Output id="tsconfig-content">
+      <CodeHighlighterComponent
+        code={SampleTsConfig}
+        language="json"
+        fileName="tsconfig.json"
+      />
+    </Output>
+    <Output id="contract">
+      <FileExplorer
+        structure={{
+          'hardhat-tutorial': {
+            'package.json': {
+              highlighted: false,
+              content: null,
+            },
+            'node_modules': {
+              highlighted: false,
+            },
+            'hardhat.config.ts': {
+              highlighted: false,
+              content: null
+            },
+            '.env': {
+              highlighted: false,
+              content: null
+            },
+            "tsconfig.json": {
+              highlighted: false,
+              content: null
+            },
+            "contracts": {
+              "HelloWorld.sol": {
+                highlighted: true,
+                content: null
+              }
+            }
+          },
+        }}
+      />
+    </Output>
+    <Output id="contract-content">
+      <CodeHighlighterComponent
+        code={SampleSolidityCode}
+        language="json"
+        fileName="tsconfig.json"
+      />
+    </Output>
+    <Output id="compile-output">
+     <Terminal
+      lines={[
+        'pnpm run compile',
+        'hardhat compile',
+        'Generating typings for: 1 artifacts in dir: typechain-types for target: ethers-v6',
+        'Successfully generated 6 typings!',
+        'Compiled 1 Solidity file successfully (evm target: paris).'
+      ]}
+     />
+    </Output>
+  </Outputs>
+</Tutorial>
+
+<div className="h-[200px]" />
+
+---
+# Congratulations!
+
+You have successfully set up a Hardhat project. In the next section, you will learn how to connect your smart contract with the frontend.
+
+
+
+<div className="h-[100px]" />
+
