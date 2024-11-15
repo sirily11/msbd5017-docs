@@ -115,7 +115,7 @@ function FileTree({ structure, level = 0 }: FileTreeProps) {
               variant="ghost"
               className={`w-full justify-start text-left ${
                 isHighlighted
-                  ? 'bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground'
+                  ? 'bg-sky-100 text-secondary-foreground hover:bg-sky-200 dark:bg-sky-900 dark:hover:bg-sky-700'
                   : ''
               }`}
               onClick={() => {

@@ -123,8 +123,46 @@ export const SampleSolidityCode = `// SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.19;
 
 contract HelloWorld {
-    function helloWorld() public returns (string memory) {
+    function helloWorld() public pure returns (string memory) {
         return "Hello, World!";
     }
 }
+`
+
+export const DescribeTestCode = `import { loadFixture } from "@nomicfoundation/hardhat-toolbox/network-helpers";
+import { expect } from "chai";
+import hre from "hardhat";
+import "@nomicfoundation/hardhat-ethers";
+import "@nomicfoundation/hardhat-chai-matchers";
+
+describe("HelloWorld", function () {
+
+
+});`
+
+export const DeployTestCode = `describe("HelloWorld", function () {
+  // Fixture to deploy the contract and set up test accounts
+  async function deployQuestSystemFixture() {
+    const HelloWorld = await hre.ethers.getContractFactory("HelloWorld");
+    const helloWorld = await HelloWorld.deploy();
+
+    return { helloWorld };
+  }
+});`
+
+export const TestTestCode = `describe("HelloWorld", function () {
+  // Fixture to deploy the contract and set up test accounts
+  async function deployQuestSystemFixture() {
+    const HelloWorld = await hre.ethers.getContractFactory("HelloWorld");
+    const helloWorld = await HelloWorld.deploy();
+
+    return { helloWorld };
+  }
+
+  it("Should return a hello world", async function () {
+    const { helloWorld } = await loadFixture(deployQuestSystemFixture);
+    const result = await helloWorld.helloWorld();
+    expect(result).to.equal("Hello, World!");
+  });
+});
 `
