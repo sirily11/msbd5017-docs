@@ -10,7 +10,7 @@ import React, {
 import { cn } from '@/lib/utils'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ChevronRight } from 'lucide-react'
-import { Card, CardContent } from '../ui/card'
+import { Card, CardContent } from '../../ui/card'
 
 type TutorialContextType = {
   activeOutputId: string | null
@@ -194,7 +194,7 @@ export const Tutorial = ({ children }: { children: React.ReactNode }) => {
     <TutorialContext.Provider
       value={{ activeOutputId, setActiveOutputId, children }}
     >
-      <div className="mb-20 grid grid-cols-2 gap-10">{children}</div>
+      <div className="grid grid-cols-2 gap-10">{children}</div>
     </TutorialContext.Provider>
   )
 }

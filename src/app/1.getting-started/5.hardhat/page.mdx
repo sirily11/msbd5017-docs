@@ -1,14 +1,19 @@
-import { Tutorial, Steps, Step, Output, Outputs } from '@/components/shared/tutorial'
-import { FileExplorer } from '@/components/shared/file-explorer-with-highlighting'
-import { CodeHighlighterComponent } from '@/components/shared/code-highlighter'
+---
+title: Hardhat compile and deploy
+---
+
+
+import { Tutorial, Steps, Step, Output, Outputs } from '@/components/shared/tutorial/tutorial'
+import { FileExplorer } from '@/components/shared/tutorial/file-explorer-with-highlighting'
+import { CodeHighlighterComponent } from '@/components/shared/tutorial/code-highlighter'
 import Image from 'next/image'
 import {
   InitializedPackageJSON,
   AfterInstallDepsPackageJSON,
   AfterScriptPackageJSON,
-  SampleHardhatConfig, SampleTsConfig, SampleSolidityCode
+  SampleHardhatConfig, SampleTsConfig, SampleSolidityCode, DescribeTestCode, DeployTestCode, TestTestCode
 } from './samplecode'
-import { Terminal } from '@/components/shared/terminal'
+import { Terminal } from '@/components/shared/tutorial/terminal'
 
 
 <Image
@@ -117,6 +122,51 @@ like `bun` is also welcome.
       Run the following command to compile the contract <br />
       ```bash
       pnpm run compile
+      ```
+    </Step>
+    <Step>
+      Now you have successfully set up a Hardhat project. Next, we will test the contract.
+    </Step>
+    <Step>
+      Testing is an essential part of the development process. It helps to ensure that the code works as expected.
+    </Step>
+    <Step outputId={"test"}>
+      Create a folder named `test` in the root of your project and create a file named `HelloWorld.spec.ts` in it.
+    </Step>
+    <Step outputId={"test-content-describe"}>
+      Add a describe block to the `HelloWorld.spec.ts` file
+    </Step>
+    <Step>
+      A describe block organizes related tests under a common description, making it easier to understand the specific
+      functionality or behavior being tested.
+      This structure is particularly useful for grouping tests that share similar purposes or behaviors.
+    </Step>
+    <Step outputId={"test-content-deploy"}>
+      Add a deploy function to the `HelloWorld.spec.ts` file
+    </Step>
+    <Step>
+      The deploy function is used to deploy the contract to the network.
+      The contract will be deployed to the hardhat testing network, so you don't need to worry about the gas fee.
+    </Step>
+    <Step outputId={"test-content-deploy-name"}>
+      Note, this `HelloWorld` is the same as the contract name in the `HelloWorld.sol` file.
+    </Step>
+    <Step outputId={"test-content-test"}>
+      Add a test function to the `HelloWorld.spec.ts` file
+    </Step>
+    <Step>
+      The test function is used to test the contract. It checks if the contract works as expected.
+    </Step>
+    <Step outputId={"test-content-test-name"}>
+      Note, this `helloWorld` is the same as the contract's function name in the `HelloWorld.sol` file.
+    </Step>
+    <Step outputId={"test-content-expect"}>
+      You can simply expect some results from the contract and check if the results are correct.
+    </Step>
+    <Step outputId={"test-result"}>
+      You can run the test by running the following command <br />
+      ```bash
+      pnpm run test
       ```
     </Step>
   </Steps>
@@ -317,19 +367,129 @@ like `bun` is also welcome.
       <CodeHighlighterComponent
         code={SampleSolidityCode}
         language="json"
-        fileName="tsconfig.json"
+        fileName="HelloWorld.sol"
       />
     </Output>
     <Output id="compile-output">
-     <Terminal
-      lines={[
-        'pnpm run compile',
-        'hardhat compile',
-        'Generating typings for: 1 artifacts in dir: typechain-types for target: ethers-v6',
-        'Successfully generated 6 typings!',
-        'Compiled 1 Solidity file successfully (evm target: paris).'
-      ]}
-     />
+      <Terminal
+        lines={[
+          'pnpm run compile',
+          'hardhat compile',
+          'Generating typings for: 1 artifacts in dir: typechain-types for target: ethers-v6',
+          'Successfully generated 6 typings!',
+          'Compiled 1 Solidity file successfully (evm target: paris).'
+        ]}
+      />
+    </Output>
+    <Output id="test">
+      <FileExplorer
+        structure={{
+          'hardhat-tutorial': {
+            'package.json': {
+              highlighted: false,
+              content: null,
+            },
+            'node_modules': {
+              highlighted: false,
+            },
+            'hardhat.config.ts': {
+              highlighted: false,
+              content: null
+            },
+            '.env': {
+              highlighted: false,
+              content: null
+            },
+            "tsconfig.json": {
+              highlighted: false,
+              content: null
+            },
+            "contracts": {
+              "HelloWorld.sol": {
+                highlighted: false,
+                content: null
+              }
+            },
+            "test": {
+              "HelloWorld.spec.ts": {
+                highlighted: true,
+                content: null
+              }
+            }
+          },
+        }}
+      />
+    </Output>
+    <Output id={"test-content-describe"}>
+      <CodeHighlighterComponent
+        code={DescribeTestCode}
+        language="typescript"
+        fileName="HelloWorld.spec.ts"
+        highlightLines={[7]}
+      />
+    </Output>
+    <Output id={"test-content-deploy"}>
+      <CodeHighlighterComponent
+        code={DeployTestCode}
+        language="typescript"
+        fileName="HelloWorld.spec.ts"
+        highlightLines={[3, 4, 5, 6, 7, 8]}
+      />
+    </Output>
+    <Output id={"test-content-deploy-name"}>
+      <CodeHighlighterComponent
+        code={DeployTestCode}
+        language="typescript"
+        fileName="HelloWorld.spec.ts"
+        highlightLines={[4]}
+      />
+      <CodeHighlighterComponent
+        code={SampleSolidityCode}
+        language="json"
+        fileName="HelloWorld.sol"
+        highlightLines={[4]}
+        className={"mt-2"}
+      />
+    </Output>
+    <Output id={"test-content-test"}>
+      <CodeHighlighterComponent
+        code={TestTestCode}
+        language="typescript"
+        fileName="HelloWorld.spec.ts"
+        highlightLines={[10, 11, 12, 13, 14]}
+      />
+    </Output>
+    <Output id={"test-content-test-name"}>
+      <CodeHighlighterComponent
+        code={"const result = await helloWorld.helloWorld();"}
+        language="typescript"
+        fileName="HelloWorld.spec.ts"
+        highlightLines={[1]}
+      /><CodeHighlighterComponent
+      code={SampleSolidityCode}
+      language="json"
+      fileName="HelloWorld.sol"
+      highlightLines={[5]}
+      className={"mt-2"}
+    />
+    </Output>
+    <Output id={"test-content-expect"}>
+      <CodeHighlighterComponent
+        code={TestTestCode}
+        language="typescript"
+        fileName="HelloWorld.spec.ts"
+        highlightLines={[13]}
+      />
+    </Output>
+    <Output id="test-result">
+      <Terminal
+        lines={[
+          'hardhat test',
+          'HelloWorld',
+          '✔ Should return a hello world (206ms)',
+          '1 passing (208ms)',
+        ]}
+      />
     </Output>
   </Outputs>
 </Tutorial>
@@ -339,7 +499,7 @@ like `bun` is also welcome.
 ---
 # Congratulations!
 
-You have successfully set up a Hardhat project. In the next section, you will learn how to connect your smart contract with the frontend.
+You have successfully set up a Hardhat project. In the next section, you will learn how to connect your sma rt contract with the frontend.
 
 
 
