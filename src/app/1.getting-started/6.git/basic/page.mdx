@@ -1,0 +1,666 @@
+---
+title: Git Basics
+---
+
+import {
+  Output,
+  Outputs,
+  Steps,
+  Tutorial,
+} from '../../../../components/shared/tutorial/tutorial'
+import { Step } from '../../../../components/shared/tutorial/tutorial'
+import { FileExplorer } from '@/components/shared/tutorial/file-explorer-with-highlighting'
+import FullscreenImageDialog from '../../../../components/shared/tutorial/fullscreen-image-dialog'
+import { MermaidDiagram } from '../../../../components/shared/tutorial/mermaid'
+
+# Git Basics
+
+Using Git for version control and collaborating with your teammates is a fundamental part of this course. Git enables you to manage your code efficiently and share it professionally.
+
+## Key Benefits of Git
+
+1. **Version Control**: Track code changes and revert to previous versions when needed
+2. **Team Collaboration**: Share code and conduct peer reviews seamlessly
+3. **Easy Submission**: Submit assignments via repository links instead of large zip files
+4. **Professional Portfolio**: Add your Git repositories to your resume to showcase your work
+5. **Open Source Experience**: Gain practical experience in open source development
+6. **Cloud Backup**: Maintain a secure backup of your code (GitHub offers unlimited storage for public repositories)
+
+## Core Git Concepts
+
+In this section, you'll learn essential Git operations including:
+
+1. Basic Operations:
+
+- Adding files to staging
+- Committing changes
+- Pushing code to [GitHub](https://github.com)
+
+2. Branch Management:
+
+- Creating feature branches
+- Working with pull requests
+- Merging and rebasing code to the main branch
+
+# Make Your First Commit
+
+> [!tip]
+> If you are on `macOS`, the Git client is already installed. You can check by running `git --version` in your terminal.
+> On `Windows`, you can download Git from the official website: [Git for Windows](https://git-scm.com/download/win)
+
+We are going to use `Fork`, a GUI client for Git, to manage our repositories. You can download Fork from the official website: [Fork](https://git-fork.com)
+However, you can still use the command line to interact with Git if you prefer. But Fork provides a more user-friendly interface for beginners.
+
+<Tutorial>
+  <Steps>
+    <Step>
+      Download the [Fork client](https://git-fork.com) from the official website and install it on your machine.
+    </Step>
+    <Step>
+      Open your terminal (or git bash on Windows) and run `git --version` to check if Git is installed.
+    </Step>
+    <Step>
+      Go to [GitHub](https://github.com).
+    </Step>
+    <Step outputId={"github-settings"}>
+      Click on your `Avatar` and click the `Settings` menu.
+    </Step>
+    <Step outputId={"developer-settings"}>
+      Click on the `Developer settings` menu.
+    </Step>
+    <Step outputId={"generate-tokens"}>
+      Click on the `Personal access tokens` > `Tokens (Classic)` or go to [this
+      link](https://github.com/settings/tokens)
+    </Step>
+    <Step>
+      Click the top right corner `Generate new token` button, and then click on the `Generate new token (classic)`
+      button.
+    </Step>
+    <Step outputId={"token-permission"}>
+      You must select the `repo` scope to access your repositories. Otherwise, you won't be able to push your code to
+      GitHub.
+      You are advised to select the `workflow` scope as well to enable GitHub Actions and set `expiration` to `90 days`
+      or less
+      to keep your account secure.
+    </Step>
+    <Step outputId={"token"}>
+      Copy your `GitHub` token on the screen. Note, you won't be able to see it again.
+    </Step>
+    <Step>
+      Open your terminal/git bash and run
+      ```bash
+      git config --global credential.helper store
+      ```
+
+      To store your credentials in the cache.
+    </Step>
+    <Step>
+      Run
+      ```bash
+      git config --global user.name "Your Name"
+      git config --global user.email "YOUR EMAIL"
+      ```
+
+      Keep in mind, use your [GitHub assigned email](https://github.com/settings/emails), not your real email!
+      You can go to [this link](https://github.com/settings/emails) and copy the email from Email section. It should end
+      with `@users.noreply.github.com`.
+    </Step>
+    <Step outputId={"repo-creation"}>
+      Create a new repository on GitHub, let's name it `git-tutorial`.
+    </Step>
+    <Step>
+      Clone the repository to your local machine by running
+      ```bash
+      git clone [repository-url]
+      ```
+      Replace the `[repository-url]` with the URL of your repository.
+    </Step>
+    <Step outputId={"readme"}>
+      Create a `readme.md` file in the repository and add some content.
+    </Step>
+    <Step outputId="fork">
+      Open the repository in Fork
+    </Step>
+    <Step>
+      You will find the `readme.md` file is in the `Unstaged` section. Click on the file or `cmd+a` to select all files
+      and click on the `Stage` button.
+    </Step>
+    <Step>
+      Add a commit message and click on the `Commit` button.
+    </Step>
+    <Step outputId={"commit"}>
+      And now you can see your commit in the `Commits` section. Click on the `Push` button to push your code to GitHub.
+    </Step>
+    <Step outputId={"push"}>
+      >[!warning]
+      > You may be ask to enter your `personal access token` you generated earlier.
+
+      And lastly, click the `Push` button to push your code to GitHub.
+    </Step>
+
+  </Steps>
+  <Outputs>
+    <Output id={"github-settings"}>
+      <FullscreenImageDialog
+        src={"/images/getting-started/github-settings.webp"}
+        alt={"GitHub Settings"}
+        className={"h-96"}
+      />
+    </Output>
+    <Output id={"developer-settings"}>
+      <FullscreenImageDialog
+        src={"/images/getting-started/developer-settings.webp"}
+        alt={"Developer Settings"}
+        className={"h-[800px]"}
+      />
+    </Output>
+    <Output id={"generate-tokens"}>
+      <FullscreenImageDialog
+        src={"/images/getting-started/generate-tokens.webp"}
+        alt={"Tokens Settings"}
+        className={"h-auto"}
+      />
+    </Output>
+    <Output id={"token-permission"}>
+      <FullscreenImageDialog
+        src={"/images/getting-started/token-permission.webp"}
+        alt={"Token Permission"}
+        className={"h-auto"}
+      />
+    </Output>
+    <Output id={"token"}>
+      <FullscreenImageDialog
+        src={"/images/getting-started/token.webp"}
+        alt={"Token"}
+        className={"h-auto"}
+      />
+    </Output>
+    <Output id={"repo-creation"}>
+      <FullscreenImageDialog
+        src={"/images/getting-started/repo-creation.webp"}
+        alt={"Create a new repository"}
+        className={"h-auto"}
+      />
+    </Output>
+    <Output id={"readme"}>
+      <FileExplorer
+        structure={{
+          'git-tutorial': {
+            'readme.md': {
+              highlighted: true,
+              content: null
+            }
+          },
+        }}
+      />
+    </Output>
+    <Output id={"fork"}>
+      <FullscreenImageDialog
+        src={"/images/getting-started/fork.webp"}
+        alt={"Fork"}
+        className={"h-auto"}
+      />
+    </Output>
+    <Output id={"commit"}>
+      <FullscreenImageDialog
+        src={"/images/getting-started/commit.webp"}
+        alt={"Commit"}
+        className={"h-auto"}
+      />
+    </Output>
+    <Output id={"push"}>
+      <FullscreenImageDialog
+        src={"/images/getting-started/push.webp"}
+        alt={"Push"}
+        className={"h-auto"}
+      />
+    </Output>
+  </Outputs>
+</Tutorial>
+
+And now you can find your repository on GitHub with the `readme.md` file you created. If you have any question on `Authentication Failed` error, you can check [this link](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/about-authentication-to-github#authenticating-with-the-command-line)
+for more information.
+
+<div className={'mt-40'} />
+
+# Git Commit History
+
+Git repositories are structured like trees, where each commit represents a node connected to its parent commit(s).
+This creates a branching history that tracks how your codebase evolves over time. We will guide you step by step
+to visualize the main concepts of Git.
+
+<div className={"pt-40"}>
+  <Tutorial>
+    <Steps>
+      <Step outputId={"main"}>
+        ### Branches and Main Branch
+      </Step>
+      <Step>
+        Just like a tree, a Git repository consists of branches that represent different versions of your codebase.
+      </Step>
+      <Step>
+        Usually, it represents different features or bug fixes that you are working on.
+      </Step>
+      <Step>
+        Some open source project may also have some `release` branches to keep track of the stable versions.
+        For example, `release/1.0`, `release/2.0`.
+      </Step>
+      <Step>
+        The main branch (historically called "master", now commonly "main") serves as the primary branch
+      </Step>
+      <Step outputId={"main-commit"}>
+        Each branch is a pointer to a specific commit
+      </Step>
+      <Step outputId={"main-commit-branches"}>
+        Multiple branches can diverge from main to develop different features independently
+      </Step>
+      <Step outputId={"commit-history"}>
+        Every commit stores:
+        - A snapshot of all tracked files
+        - Author information
+        - Timestamp
+        - Commit message
+        - Reference to parent commit(s)
+
+        Since it stores the reference to the parent commit(s), it means
+      </Step>
+      <Step outputId={"commit-history-revert"}>
+        We have the ability to (hard) reset to any previous commit.
+        >[!warning]
+        > Hard reset: This operation is irreversible and will remove all the commits after the selected commit.
+        > Use this operation with caution.
+      </Step>
+      <Step outputId={"commit-checkout"}>
+        Or check out to any previous commit to see the code at that time.
+      </Step>
+    </Steps>
+    <Outputs>
+      <Output id={"main"}>
+        <MermaidDiagram
+          id={"main"}
+          definition={`
+      gitGraph TB:
+      `} />
+      </Output>
+      <Output id={"main-commit"}>
+        <MermaidDiagram
+          id={"main-commit"}
+          definition={`
+      gitGraph TB:
+        commit
+      `} />
+      </Output>
+      <Output id={"main-commit-branches"}>
+        <MermaidDiagram
+          id={"main-commit-branches"}
+          definition={`
+      gitGraph TB:
+        commit
+        commit
+        branch feauture/1
+        branch feauture/2
+        checkout feauture/1
+        commit
+        checkout feauture/2
+        commit
+        checkout main
+        commit
+        commit
+
+`} />
+      </Output>
+      <Output id={"commit-history"}>
+        <MermaidDiagram
+          id={"commit-history"}
+          definition={`
+gitGraph TB:
+commit id: "commit 1"
+commit id: "commit 2"
+commit id: "commit 3"
+`} />
+      </Output>
+      <Output id={"commit-history-revert"}>
+        <MermaidDiagram
+          id={"commit-history-revert"}
+          definition={`
+gitGraph TB:
+commit id: "commit 1"
+commit id: "commit 2"
+`} />
+      </Output>
+      <Output id={"commit-checkout"}>
+        <MermaidDiagram
+          id={"commit-checkout"}
+          definition={`
+gitGraph TB:
+commit id: "commit 1"
+commit id: "commit 2"
+branch "Current head"
+checkout "Current head"
+commit id: " " type: HIGHLIGHT
+checkout "main"
+commit id: "commit 3"
+`} />
+
+</Output>
+</Outputs>
+  </Tutorial>
+</div>
+
+Branches are essential in Git to manage different versions of your codebase. It enables us to:
+
+- Create feature branches for new development
+- Merge completed features back to main
+- Delete obsolete branches to maintain cleanliness
+- Use tags to mark important versions/releases
+
+But managing branches can be tricky and lead to conflicts if not done correctly.
+
+# Merge and Rebase
+
+Merge and rebase are two essential operations in Git. They help you combine changes from different branches and maintain a clean commit history. Below are some best practices to follow:
+
+<Tutorial>
+  <Steps>
+    <Step outputId={'rebase'}>
+      Rebase is a powerful operation that allows you to integrate changes from
+      one branch to another by moving, or rebasing, the commits to the target
+      branch.
+    </Step>
+    <Step>
+      It will produce a linear commit history, making it easier to understand.
+    </Step>
+    <Step>
+      >[!note]
+      > <span className={"text-purple-500"}>Main branch</span> is in purple color and <span className={"text-rose-300"}>feature branch</span> is in rose color.
+
+      And just like the name suggests, it will re**base** your commits on top of the main branch.
+      You can see from the diagram, the commit `C` is originally on the same level as `D`,
+      but after the rebase, it is the child of `D`.
+    </Step>
+    <Step outputId={"squash-rebase"}>
+      **Squash and rebase** is a very popular operation in open source projects.
+    </Step>
+
+  <Step>
+    Unlike regular rebase, squash and rebase will combine all the commits in your feature branch into a single commit.
+  </Step>
+    <Step>
+      Usually, the squashed commit message will be a summary of all the changes in the feature branch.
+      And links to the original pull request.
+    </Step>
+    <Step>
+      This operation is very useful when you have a lot of small commits in your feature branch.
+      And you want to keep the main branch clean.
+    </Step>
+    <Step outputId={"merge"}>
+      **Merge** is another operation that combines changes from different branches.
+    </Step>
+    <Step>
+      It will create a new commit that combines the changes from the source branch to the target branch.
+    </Step>
+    <Step outputId={"merge-main"}>
+      For example, suppose we have commits `A`, `B`, and `C` in the main branch.
+    </Step>
+    <Step outputId={"merge-feature"}>
+      And we have commits `A'`, `B'`, and `C'` in the feature branch.
+    </Step>
+    <Step outputId={"merge-after"}>
+      After merging the feature branch into the main branch, we will have a new commit `M` that combines the changes from both branches.
+    </Step>
+    <Step>
+      The benefit of merge is that it preserves the history of both branches.
+    </Step>
+    <Step>
+      Which also means users can see the complete history of the changes. And it is easier to track down the changes.
+    </Step>
+    <Step outputId={"merge-large"}>
+      However, in a large project, the commit history can be very messy.
+    </Step>
+    <Step>
+      It is almost impossible to track down the changes in the commit history.
+    </Step>
+    <Step>
+      And that's why rebase is preferred in most open source projects.
+    </Step>
+    <Step>
+      In GitHub, you can also add `branch protection rules` to require a linear commit history.
+    </Step>
+    <Step>
+      Which will prevent users from merging the feature branch if it has a messy commit history.
+    </Step>
+  </Steps>
+  <Outputs>
+    <Output id={'rebase'}>
+      <MermaidDiagram
+        id={'rebase'}
+        definition={`graph LR
+     subgraph Rebased
+        A2[A] --> B2[B]
+        B2 --> D2[D]
+        D2 --> C2[C]
+        style A2 fill:#e6ccff
+        style B2 fill:#e6ccff
+        style D2 fill:#e6ccff
+        style C2 fill:#ffcccc
+    end
+    subgraph Before Rebase
+        A1[A] --> B1[B]
+        B1 --> D1[D]
+        B1 --> C1[C]
+        style A1 fill:#e6ccff
+        style B1 fill:#e6ccff
+        style D1 fill:#e6ccff
+        style C1 fill:#ffcccc
+    end
+
+    `}
+      />
+    </Output>
+
+<Output id={"squash-rebase"}>
+  <MermaidDiagram
+    id={"squash-rebase"}
+    definition={`
+    graph LR
+      subgraph "After Squash"
+            A2[A] --> B2[B]
+            B2 --> D2[D]
+            D2 --> C_Squashed[C']
+            style A2 fill:#e6ccff
+            style B2 fill:#e6ccff
+            style D2 fill:#e6ccff
+            style C_Squashed fill:#ffcccc
+        end
+        subgraph "Before Squash"
+            A1[A] --> B1[B]
+            B1 --> D1[D]
+            B1 --> C1[C]
+            C1 --> E1[E]
+            style A1 fill:#e6ccff
+            style B1 fill:#e6ccff
+            style D1 fill:#e6ccff
+            style C1 fill:#ffcccc
+            style E1 fill:#ffcccc
+        end
+
+`}
+/>
+
+</Output>
+    <Output id={"merge"}>
+      <MermaidDiagram
+        id={"merge-main"}
+        definition={`
+         gitGraph TB:
+          commit id: "initial"
+          branch feature
+          checkout feature
+          commit id: "add-feature"
+          commit id: "fix-bug"
+          checkout main
+          commit id: "update-docs"
+          merge feature
+          commit id: "release"
+        `}
+      />
+    </Output>
+    <Output id={"merge-main"}>
+      <MermaidDiagram
+        id={"merge-main"}
+        definition={`
+          gitGraph TB:
+          commit id: "A"
+          commit id: "B"
+          commit id: "C"
+        `}
+        />
+    </Output>
+    <Output id={"merge-feature"}>
+      <MermaidDiagram
+        id={"merge-feature"}
+        definition={`
+          gitGraph TB:
+          commit id: "A'"
+          commit id: "B'"
+          commit id: "C'"
+          branch feature
+          checkout feature
+          commit id: "D"
+          commit id: "E"
+          commit id: "F"
+        `}
+      />
+    </Output>
+    <Output id={"merge-after"}>
+      <MermaidDiagram
+        id={"merge-after"}
+        definition={`
+        gitGraph TB:
+          commit id: "A'"
+          commit id: "B'"
+          commit id: "C'"
+          branch feature
+          checkout feature
+          commit id: "D"
+          commit id: "E"
+          commit id: "F"
+          checkout main
+          merge feature`}
+      />
+    </Output>
+    <Output id={"merge-large"}>
+      <MermaidDiagram
+        id={"merge-large"}
+        definition={`
+        gitGraph TB:
+    commit id: "initial setup"
+    branch develop
+    checkout develop
+    commit id: "set up dev environment"
+
+    branch feature/auth
+    checkout feature/auth
+    commit id: "add login page"
+    commit id: "implement OAuth"
+
+    branch feature/dashboard
+    checkout feature/dashboard
+    commit id: "create dashboard UI"
+    commit id: "add data tables"
+
+    checkout develop
+    merge feature/auth
+
+    branch feature/api
+    checkout feature/api
+    commit id: "REST endpoints"
+    commit id: "add validation"
+
+    checkout main
+    branch hotfix/security
+    checkout hotfix/security
+    commit id: "patch CVE-2024-001"
+    checkout main
+    merge hotfix/security
+    checkout develop
+    merge hotfix/security
+
+    checkout feature/dashboard
+    commit id: "fix responsive layout"
+    checkout develop
+    merge feature/dashboard
+
+    checkout feature/api
+    commit id: "add caching"
+    checkout develop
+    merge feature/api
+
+    branch release/v1.0
+    checkout release/v1.0
+    commit id: "version bump"
+    commit id: "update changelog"
+    checkout main
+    merge release/v1.0
+    checkout develop
+    merge release/v1.0
+
+    branch feature/analytics
+    checkout feature/analytics
+    commit id: "add tracking"
+    commit id: "reporting tools"
+
+    branch feature/search
+    checkout feature/search
+    commit id: "search UI"
+    commit id: "implement filters"
+
+    checkout develop
+    merge feature/analytics
+
+    branch hotfix/perf
+    checkout hotfix/perf
+    commit id: "optimize queries"
+    checkout main
+    merge hotfix/perf
+    checkout develop
+    merge hotfix/perf
+
+    checkout feature/search
+    commit id: "advanced search"
+    checkout develop
+    merge feature/search
+
+    branch release/v1.1
+    checkout release/v1.1
+    commit id: "version 1.1"
+    checkout main
+    merge release/v1.1
+    checkout develop
+    merge release/v1.1
+        `}
+      />
+    </Output>
+
+  </Outputs>
+</Tutorial>
+
+## Best Practices
+
+1. **Work on a Feature Branch:**
+   Always work on a feature branch and create a pull request to merge your changes. Avoid pushing directly to the `main` branch.
+
+2. **Limit Pull Request Size:**
+   Each pull request should not exceed **500 lines** of changes. If it does, consider splitting it into smaller, more manageable pull requests.
+
+3. **Commit and Merge Frequently:**
+   Commit your changes often and merge frequently to minimize the risk of conflicts.
+
+4. **Use Conventional Commits:**
+   Write meaningful commit messages following the [Conventional Commits](https://www.conventionalcommits.org/) standard, such as:
+
+- `feat: add new feature`
+- `fix: resolve bug`
+
+5. **Prefer Rebase Over Merge:**
+   Rebase helps maintain a clean and linear commit history. Use it whenever possible, especially for integrating changes from `main` into your feature branch.

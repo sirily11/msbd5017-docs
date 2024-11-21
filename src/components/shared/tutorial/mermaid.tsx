@@ -1,14 +1,27 @@
+'use client'
+
 import { useEffect, useRef } from 'react'
 import mermaid from 'mermaid'
 
-export const MermaidDiagram = ({ definition }: { definition: string }) => {
+export const MermaidDiagram = ({
+  definition,
+  id,
+  diagramClassName,
+  className,
+}: {
+  definition: string
+  id: string
+  className?: string
+  diagramClassName?: string
+}) => {
   const mermaidRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     // Initialize mermaid
     mermaid.initialize({
-      startOnLoad: true,
-      theme: 'default',
+      startOnLoad: false,
+      theme: 'forest',
+      deterministicIds: true,
       securityLevel: 'loose',
     })
 
@@ -16,17 +29,25 @@ export const MermaidDiagram = ({ definition }: { definition: string }) => {
     const renderDiagram = async () => {
       if (mermaidRef.current) {
         mermaidRef.current.innerHTML = '' // Clear previous diagram
-        const { svg } = await mermaid.render('mermaid-diagram', definition)
+
+        const uniqueId = `mermaid-${id}-${Date.now()}`
+        const { svg } = await mermaid.render(uniqueId, definition)
+        console.log('Rendered Mermaid diagram:', svg)
         mermaidRef.current.innerHTML = svg
       }
     }
 
-    renderDiagram()
-  }, [definition])
+    renderDiagram().catch((error) => {
+      console.error('Failed to render Mermaid diagram:', error)
+    })
+  }, [definition, id])
 
   return (
-    <div className="rounded-lg bg-white p-4 shadow-sm">
-      <div ref={mermaidRef} className="w-full overflow-x-auto" />
+    <div className={`rounded-lg bg-white p-4 shadow-sm ${className}`}>
+      <div
+        ref={mermaidRef}
+        className={`w-full overflow-x-auto overflow-y-auto`}
+      />
     </div>
   )
 }
