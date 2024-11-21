@@ -73,7 +73,7 @@ export const Step = ({
         sticky && 'sticky top-0 z-10',
         isClickable && 'cursor-pointer',
         outputId === activeOutputId &&
-          'bg-sky-50 transition-colors dark:bg-sky-800',
+          'border-l-8 border-l-sky-600 transition-colors',
       )}
       data-output-id={outputId}
       onClick={() => {
