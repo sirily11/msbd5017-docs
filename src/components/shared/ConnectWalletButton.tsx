@@ -30,7 +30,7 @@ export default function ConnectWalletButton({ session }: { session: any }) {
           onClick={() => {
             setOpenModal(true)
           }}
-          className="connect-wallet-button cursor-pointer"
+          className="connect-wallet-button cursor-pointer disabled:cursor-progress"
         >
           Connect Wallet
         </Button>

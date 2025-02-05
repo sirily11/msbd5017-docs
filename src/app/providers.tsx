@@ -7,9 +7,11 @@ import {
   MetaMaskProvider,
   OKXProvider,
   WalletContextProvider,
+  WalletConnectProvider,
 } from 'web3-connect-react'
 import { signOut } from '@/actions/actions'
 import { useRouter } from 'next/navigation'
+import { axiomGemeni } from '@/lib/network'
 
 function ThemeWatcher() {
   let { resolvedTheme, setTheme } = useTheme()
@@ -33,6 +35,13 @@ function ThemeWatcher() {
   }, [resolvedTheme, setTheme])
 
   return null
+}
+
+const metadata = {
+  name: 'ChainLab',
+  description: 'ChainLab',
+  url: 'https://chainlab.com',
+  icons: ['https://chainlab.com/icon.png'],
 }
 
 export function Providers({
