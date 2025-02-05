@@ -8,6 +8,7 @@ import {
   OKXProvider,
   WalletContextProvider,
   WalletConnectProvider,
+  PhantomProvider,
 } from 'web3-connect-react'
 import { signOut } from '@/actions/actions'
 import { useRouter } from 'next/navigation'
@@ -58,7 +59,7 @@ export function Providers({
       <EnvironmentContextProvider isMobile={false} isTest={false}>
         <WalletContextProvider
           session={session}
-          providers={[OKXProvider, MetaMaskProvider]}
+          providers={[OKXProvider, MetaMaskProvider, PhantomProvider]}
           onSignedOut={async () => {
             await signOut()
             router.refresh()
