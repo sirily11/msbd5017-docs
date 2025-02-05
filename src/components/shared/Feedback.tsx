@@ -48,7 +48,7 @@ const FeedbackForm = forwardRef<
       <p className="text-sm text-zinc-600 dark:text-zinc-400">
         Was this page helpful?
       </p>
-      <div className="group grid h-8 grid-cols-[1fr,1px,1fr] overflow-hidden rounded-full border border-zinc-900/10 dark:border-white/10">
+      <div className="group grid h-8 grid-cols-[1fr_1px_1fr] overflow-hidden rounded-full border border-zinc-900/10 dark:border-white/10">
         <FeedbackButton data-response="yes">Yes</FeedbackButton>
         <div className="bg-zinc-900/10 dark:bg-white/10" />
         <FeedbackButton data-response="no">No</FeedbackButton>
@@ -94,12 +94,12 @@ export function Feedback() {
     <div className="relative h-8">
       <Transition show={!submitted}>
         <FeedbackForm
-          className="duration-300 data-[leave]:pointer-events-none data-[closed]:opacity-0"
+          className="duration-300 data-leave:pointer-events-none data-closed:opacity-0"
           onSubmit={onSubmit}
         />
       </Transition>
       <Transition show={submitted}>
-        <FeedbackThanks className="delay-150 duration-300 data-[closed]:opacity-0" />
+        <FeedbackThanks className="delay-150 duration-300 data-closed:opacity-0" />
       </Transition>
     </div>
   )

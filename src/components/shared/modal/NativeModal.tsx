@@ -22,7 +22,7 @@ export function NativeModal({
   children,
   className,
 }: Props) {
-  const ref = useRef<HTMLDialogElement>()
+  const ref = useRef<HTMLDialogElement>(null)
 
   useEffect(() => {
     if (openModal) {
@@ -51,7 +51,7 @@ export function NativeModal({
     <dialog
       ref={ref as any}
       onCancel={closeModal}
-      className={`open:animate-modalf rounded-[32px] dark:bg-[#1C1F26] ${className}`}
+      className={`open:animate-modalf absolute inset-0 m-auto w-fit max-w-[90%] rounded-[32px] dark:bg-[#1C1F26] ${className}`}
     >
       {children}
     </dialog>

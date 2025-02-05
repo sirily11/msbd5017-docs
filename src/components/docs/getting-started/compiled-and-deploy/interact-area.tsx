@@ -6,17 +6,18 @@ import { Input } from '@/components/ui/input'
 import { useSolidity } from '@/context/solidityContext'
 import { Loader2, RefreshCw, Trash } from 'lucide-react'
 import { useEffect, useState } from 'react'
-import { useWallet } from 'web3-connect-react'
+import { useAddresses, useWallet } from 'web3-connect-react'
 
 const DEPLOYED_CONTRACT_KEY = 'compile-and-deploy-contract'
 const ABI_KEY = 'compile-and-deploy-abi'
 
 export default function ContractInteract() {
-  const { sdk, walletAddress } = useWallet()
+  const { sdk } = useWallet()
   const [abi, setAbi] = useState<any>()
   const [isDeploying, setIsDeploying] = useState<boolean>(false)
   const [contractAddress, setContractAddress] = useState<string | null>(null)
   const { compilerOutput, isCompiling } = useSolidity()
+  const { addresses } = useAddresses('ethereum')
 
   const deployContract = async () => {
     if (!sdk || !sdk.provider) {
@@ -30,7 +31,10 @@ export default function ContractInteract() {
         throw new Error('Contract not found')
       }
       const address = await sdk
-        .deployContract(contract.abi, contract.evm.bytecode.object)
+        .deployContract({
+          abi: contract.abi,
+          bytecode: contract.evm.bytecode.object,
+        })
         .finally(() => setIsDeploying(false))
       sessionStorage.setItem(DEPLOYED_CONTRACT_KEY, address)
       sessionStorage.setItem(ABI_KEY, JSON.stringify(contract.abi))
@@ -50,11 +54,14 @@ export default function ContractInteract() {
   }
 
   useEffect(() => {
+    if (!addresses) {
+      return
+    }
     const contractAddress = sessionStorage.getItem(DEPLOYED_CONTRACT_KEY)
     const abi = sessionStorage.getItem(ABI_KEY)
     setContractAddress(contractAddress)
     setAbi(abi ? JSON.parse(abi) : null)
-  }, [sdk, walletAddress, sdk.provider, contractAddress])
+  }, [sdk, addresses, sdk.provider, contractAddress])
 
   return (
     <Card className="h-full w-full px-2">
@@ -111,27 +118,29 @@ export function InteractArea({
   const [currentBalance, setCurrentBalance] = useState<string>('')
   const [isMinting, setIsMinting] = useState<boolean>(false)
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false)
-  const { sdk, walletAddress } = useWallet()
+  const { sdk } = useWallet()
+  const { addresses } = useAddresses('ethereum')
 
   useEffect(() => {
     getBalance()
-  }, [sdk, walletAddress, sdk.provider, contractAddress])
+  }, [sdk, addresses, sdk.provider, contractAddress])
 
   const getBalance = async () => {
-    if (!walletAddress || !sdk || !sdk.provider || !contractAddress) {
+    if (!addresses || !sdk || !sdk.provider || !contractAddress) {
       return
     }
     if (!abi) {
       return
     }
+    const walletAddress = addresses[0]
     try {
       setIsRefreshing(true)
-      const result = await sdk.callContractMethod(
+      const result = await sdk.callContractMethod({
         contractAddress,
         abi,
-        'balanceOf',
-        [walletAddress],
-      )
+        method: 'balanceOf',
+        params: [walletAddress],
+      })
       setCurrentBalance(result)
     } catch (error: any) {
       console.error(error)
@@ -142,7 +151,7 @@ export function InteractArea({
   }
 
   const mint = async () => {
-    if (!walletAddress || !sdk || !sdk.provider || !contractAddress) {
+    if (!addresses || !sdk || !sdk.provider || !contractAddress) {
       return
     }
     if (!abi) {
@@ -150,10 +159,12 @@ export function InteractArea({
     }
     try {
       setIsMinting(true)
-      await sdk.callContractMethod(contractAddress, abi, 'mint', [
-        walletAddress,
-        value,
-      ])
+      await sdk.callContractMethod({
+        contractAddress,
+        abi,
+        method: 'mint',
+        params: [addresses[0], value],
+      })
       await getBalance()
     } catch (error: any) {
       console.error(error)
@@ -183,9 +194,7 @@ export function InteractArea({
           variant="outline"
           size="icon"
           onClick={getBalance}
-          disabled={
-            isRefreshing || !walletAddress || !sdk || !sdk.provider || !abi
-          }
+          disabled={isRefreshing || !addresses || !sdk || !sdk.provider || !abi}
         >
           <RefreshCw
             className={`h-4 w-4 ${isRefreshing ? 'animate-spin' : ''}`}
@@ -199,7 +208,7 @@ export function InteractArea({
         disabled={
           isMinting ||
           value.length === 0 ||
-          !walletAddress ||
+          !addresses ||
           !sdk ||
           !sdk.provider ||
           !abi

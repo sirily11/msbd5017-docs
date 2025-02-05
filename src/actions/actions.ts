@@ -100,7 +100,7 @@ export async function session() {
 }
 
 export async function signOut() {
-  (await cookies()).delete(SessionKey)
+  ;(await cookies()).delete(SessionKey)
 }
 
 export async function signIn(
@@ -115,7 +115,7 @@ export async function signIn(
     }
   }
 
-  (await cookies()).set(walletAddress, JSON.stringify({ isAuth: true }), {
+  ;(await cookies()).set(walletAddress, JSON.stringify({ isAuth: true }), {
     maxAge: 60, // 1 minute
   })
   return {}
@@ -129,8 +129,9 @@ export async function storeSession(walletAddress: string, session: any) {
     }
   }
 
-  (await cookies()).delete(walletAddress)
-  (await cookies()).set(SessionKey, JSON.stringify(session), {
+  const cookie = await cookies()
+  cookie.delete(walletAddress)
+  cookie.set(SessionKey, JSON.stringify(session), {
     maxAge: 60 * 60 * 24 * 7, // 1 week
   })
   return {}

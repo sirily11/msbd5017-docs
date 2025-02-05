@@ -75,9 +75,9 @@ function CopyButton({ code }: { code: string }) {
     <button
       type="button"
       className={clsx(
-        'group/button absolute right-4 top-3.5 overflow-hidden rounded-full py-1 pl-2 pr-3 text-2xs font-medium opacity-0 backdrop-blur transition focus:opacity-100 group-hover:opacity-100',
+        'group/button text-2xs absolute top-3.5 right-4 overflow-hidden rounded-full py-1 pr-3 pl-2 font-medium opacity-0 backdrop-blur-sm transition group-hover:opacity-100 focus:opacity-100',
         copied
-          ? 'bg-emerald-400/10 ring-1 ring-inset ring-emerald-400/20'
+          ? 'bg-emerald-400/10 ring-1 ring-emerald-400/20 ring-inset'
           : 'bg-white/5 hover:bg-white/7.5 dark:bg-white/2.5 dark:hover:bg-white/5',
       )}
       onClick={() => {
@@ -115,7 +115,7 @@ function CodePanelHeader({ tag, label }: { tag?: string; label?: string }) {
   }
 
   return (
-    <div className="flex h-9 items-center gap-2 border-y border-b-white/7.5 border-t-transparent bg-white/2.5 bg-zinc-900 px-4 dark:border-b-white/5 dark:bg-white/1">
+    <div className="flex h-9 items-center gap-2 border-y border-t-transparent border-b-white/7.5 bg-zinc-900 px-4 dark:border-b-white/5 dark:bg-white/1">
       {tag && (
         <div className="dark flex">
           <Tag variant="small">{tag}</Tag>
@@ -143,11 +143,11 @@ function CodePanel({
   code?: string
 }) {
   let child = Children.only(children)
-
   if (isValidElement(child)) {
-    tag = child.props.tag ?? tag
-    label = child.props.label ?? label
-    code = child.props.code ?? code
+    const props = child.props as { tag?: string; label?: string; code?: string }
+    tag = props.tag ?? tag
+    label = props.label ?? label
+    code = props.code ?? code
   }
 
   if (!code) {
@@ -160,7 +160,7 @@ function CodePanel({
     <div className="group dark:bg-white/2.5">
       <CodePanelHeader tag={tag} label={label} />
       <div className="relative">
-        <pre className="max-w-full overflow-x-auto whitespace-pre-wrap break-words p-4 text-xs text-white">
+        <pre className="max-w-full overflow-x-auto p-4 text-xs break-words whitespace-pre-wrap text-white">
           {children}
         </pre>
         <CopyButton code={code} />
@@ -185,7 +185,7 @@ function CodeGroupHeader({
   }
 
   return (
-    <div className="flex min-h-[calc(theme(spacing.12)+1px)] flex-wrap items-start gap-x-4 border-b border-zinc-700 bg-zinc-800 px-4 dark:border-zinc-800 dark:bg-transparent">
+    <div className="flex min-h-[calc(--spacing(12)+1px)] flex-wrap items-start gap-x-4 border-b border-zinc-700 bg-zinc-800 px-4 dark:border-zinc-800 dark:bg-transparent">
       {title && (
         <h3 className="mr-auto pt-3 text-xs font-semibold text-white">
           {title}
@@ -196,13 +196,17 @@ function CodeGroupHeader({
           {Children.map(children, (child, childIndex) => (
             <Tab
               className={clsx(
-                'border-b py-3 transition ui-not-focus-visible:outline-none',
+                'ui-not-focus-visible:outline-hidden border-b py-3 transition',
                 childIndex === selectedIndex
                   ? 'border-emerald-500 text-emerald-400'
                   : 'border-transparent text-zinc-400 hover:text-zinc-300',
               )}
             >
-              {getPanelTitle(isValidElement(child) ? child.props : {})}
+              {getPanelTitle(
+                isValidElement(child)
+                  ? (child.props as { title?: string; language?: string })
+                  : {},
+              )}
             </Tab>
           ))}
         </TabList>
@@ -234,7 +238,7 @@ function CodeGroupPanels({
 
 function usePreventLayoutShift() {
   let positionRef = useRef<HTMLElement>(null)
-  let rafRef = useRef<number>()
+  let rafRef = useRef<number | undefined>(undefined)
 
   useEffect(() => {
     return () => {
@@ -315,7 +319,9 @@ export function CodeGroup({
 }: React.ComponentPropsWithoutRef<typeof CodeGroupPanels> & { title: string }) {
   let languages =
     Children.map(children, (child) =>
-      getPanelTitle(isValidElement(child) ? child.props : {}),
+      isValidElement(child)
+        ? getPanelTitle(child.props as any)
+        : getPanelTitle({ title: '', language: '' }),
     ) ?? []
   let tabGroupProps = useTabGroupProps(languages)
   let hasTabs = Children.count(children) > 1

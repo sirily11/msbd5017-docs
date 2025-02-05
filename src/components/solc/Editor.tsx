@@ -279,10 +279,10 @@ export default function Editor({
             await compileSourceCode(sourceCode)
           }
         }}
-        className={`${hasErrors ? '!bg-red-500 hover:bg-red-400' : ''} ${success ? '!bg-green-500' : ''} dark:text-white`}
+        className={`${hasErrors ? 'bg-red-500! hover:bg-red-400' : ''} ${success ? 'bg-green-500!' : ''} dark:text-white`}
       >
         <div
-          className={`relative h-8 ${isCompiling ? 'w-8' : hasErrors ? 'w-52' : 'w-44'} ${success ? '!w-42' : ''} overflow-hidden transition-all`}
+          className={`relative h-8 ${isCompiling ? 'w-8' : hasErrors ? 'w-52' : 'w-44'} ${success ? 'w-42!' : ''} overflow-hidden transition-all`}
         >
           <Transition
             show={isCompiling}

@@ -414,7 +414,7 @@ export default function PixelQuestSystemComponent() {
 
         {currentUser === 'Creator' && (
           <div className="wooden-frame mb-4 p-4">
-            <h2 className="pixel-text !mt-0 mb-2 text-2xl text-yellow-400">
+            <h2 className="pixel-text mt-0! mb-2 text-2xl text-yellow-400">
               Forge a New Quest
             </h2>
             <div className="mb-2">
@@ -453,7 +453,7 @@ export default function PixelQuestSystemComponent() {
         )}
 
         <div className="wooden-frame p-4">
-          <h2 className="pixel-text !mt-0 mb-2 text-2xl">
+          <h2 className="pixel-text mt-0! mb-2 text-2xl">
             {currentUser === 'Creator'
               ? 'Your Legendary Quests'
               : 'Available Quests'}

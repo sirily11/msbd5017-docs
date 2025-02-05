@@ -5,9 +5,6 @@ const ConnectWalletExample = dynamic(() => import('./1.ConnectWalletExample'))
 
 const ConnectToTargetNetwork = dynamic(
   () => import('./2.ConnectToTargetNetwork'),
-  {
-    ssr: false,
-  },
 )
 
 const ClaimTestingToken = dynamic(() => import('./3.ClaimTestingToken'))

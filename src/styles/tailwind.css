@@ -1,14 +1,37 @@
+@import 'tailwindcss';
+@import 'remark-callouts/styles.css' layer(utilities);
+
+@config '../../tailwind.config.ts';
+
+/*
+  The default border color has changed to `currentColor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentColor);
+  }
+}
+
 @layer base {
   :root {
-    --shiki-color-text: theme('colors.white');
-    --shiki-token-constant: theme('colors.emerald.300');
-    --shiki-token-string: theme('colors.emerald.300');
-    --shiki-token-comment: theme('colors.zinc.500');
-    --shiki-token-keyword: theme('colors.sky.300');
-    --shiki-token-parameter: theme('colors.pink.300');
-    --shiki-token-function: theme('colors.violet.300');
-    --shiki-token-string-expression: theme('colors.emerald.300');
-    --shiki-token-punctuation: theme('colors.zinc.200');
+    --shiki-color-text: var(--color-white);
+    --shiki-token-constant: var(--color-emerald-300);
+    --shiki-token-string: var(--color-emerald-300);
+    --shiki-token-comment: var(--color-zinc-500);
+    --shiki-token-keyword: var(--color-sky-300);
+    --shiki-token-parameter: var(--color-pink-300);
+    --shiki-token-function: var(--color-violet-300);
+    --shiki-token-string-expression: var(--color-emerald-300);
+    --shiki-token-punctuation: var(--color-zinc-200);
     --background: 0 0% 100%;
     --foreground: 240 10% 3.9%;
     --card: 0 0% 100%;
@@ -66,11 +89,6 @@
     --chart-5: 340 75% 55%;
   }
 }
-
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-@import 'remark-callouts/styles.css';
 @layer base {
   * {
     @apply border-border;

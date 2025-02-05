@@ -3,6 +3,8 @@ import { X } from 'lucide-react'
 import { cloneElement, useCallback, useState } from 'react'
 import {
   AvailableProvider,
+  useAddresses,
+  useBalance,
   useWallet,
   WalletProvider,
 } from 'web3-connect-react'
@@ -34,7 +36,7 @@ function WalletItem({
   closeModal: () => void
 }) {
   const image = cloneElement(provider.metadata.image as any, {
-    className: 'rounded-lg !h-5 !w-5 !object-cover',
+    className: 'rounded-lg h-5! w-5! object-cover!',
   })
 
   const { sdk, signIn } = useWallet()
@@ -94,7 +96,7 @@ function WalletItem({
         // disabled={!provider.isEnabled(sdk.walletProviders)}
         onClick={handleClick}
         className={
-          'flex h-full w-full flex-row items-center rounded-[10px] bg-[#D1D5DB] bg-opacity-30 p-[15px] pb-[15px] pl-5 pr-[35px] hover:bg-opacity-50 disabled:cursor-not-allowed'
+          'bg-opacity-30 hover:bg-opacity-50 flex h-full w-full flex-row items-center rounded-[10px] bg-[#D1D5DB] p-[15px] pr-[35px] pb-[15px] pl-5 disabled:cursor-not-allowed'
         }
       >
         <div className={'flex w-full flex-row justify-between'}>
@@ -128,7 +130,9 @@ function WalletItem({
 }
 
 export function ConnectWalletModal({ closeModal, isSignedIn }: Props) {
-  const { sdk, walletAddress, signOut, balance } = useWallet()
+  const { sdk, signOut } = useWallet()
+  const { addresses } = useAddresses('ethereum')
+  const { balance } = useBalance('ethereum')
 
   return (
     <div className={'flex p-8'}>
@@ -138,7 +142,7 @@ export function ConnectWalletModal({ closeModal, isSignedIn }: Props) {
         }
       >
         <button
-          className={'absolute right-10 top-10'}
+          className={'absolute top-10 right-10'}
           onClick={() => {
             closeModal()
           }}
@@ -147,7 +151,7 @@ export function ConnectWalletModal({ closeModal, isSignedIn }: Props) {
         </button>
         {!isSignedIn && (
           <>
-            <h1 className={'text-center text-2xl font-bold text-primary'}>
+            <h1 className={'text-primary text-center text-2xl font-bold'}>
               Sign In To MSBD 5017 Website
             </h1>
             <p className={'text-center text-sm font-normal'}>
@@ -166,8 +170,8 @@ export function ConnectWalletModal({ closeModal, isSignedIn }: Props) {
 
         {isSignedIn && (
           <UserProfile
-            userWalletAddress={walletAddress}
-            userWalletBalance={balance}
+            userWalletAddress={addresses?.[0]}
+            userWalletBalance={balance?.[0]}
             onSignOut={function (): void {
               signOut()
               closeModal()
