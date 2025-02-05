@@ -43,7 +43,7 @@ export const MermaidDiagram = ({
   }, [definition, id])
 
   return (
-    <div className={`rounded-lg bg-white p-4 shadow-sm ${className}`}>
+    <div className={`rounded-lg bg-white p-4 shadow-xs ${className}`}>
       <div
         ref={mermaidRef}
         className={`w-full overflow-x-auto overflow-y-auto`}

@@ -18,7 +18,7 @@ export function Terminal({
           <div className="h-3 w-3 rounded-full bg-yellow-500"></div>
           <div className="h-3 w-3 rounded-full bg-green-500"></div>
         </div>
-        <div className="flex-grow text-center text-sm font-medium text-gray-300">
+        <div className="grow text-center text-sm font-medium text-gray-300">
           Terminal
         </div>
       </div>

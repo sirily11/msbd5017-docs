@@ -228,11 +228,11 @@ export function EnhancedCandidateDisplay() {
         {candidates.map((candidate, index) => (
           <Card
             key={candidate.id}
-            className={`col-span-full flex flex-col ${index === 0 ? 'sticky top-10 bg-gradient-to-r from-blue-50 to-purple-50 lg:col-span-2 dark:from-blue-900 dark:to-purple-900' : ''}`}
+            className={`col-span-full flex flex-col ${index === 0 ? 'sticky top-10 bg-linear-to-r from-blue-50 to-purple-50 lg:col-span-2 dark:from-blue-900 dark:to-purple-900' : ''}`}
           >
             <CardHeader>
               {index === 0 && (
-                <Badge className="bg-gradient-to-r from-fuchsia-600 to-purple-600">
+                <Badge className="bg-linear-to-r from-fuchsia-600 to-purple-600">
                   Editor's Choice
                 </Badge>
               )}
@@ -251,7 +251,7 @@ export function EnhancedCandidateDisplay() {
                 </div>
               </div>
             </CardHeader>
-            <CardContent className="flex-grow">
+            <CardContent className="grow">
               <p
                 className={`mb-4 text-sm text-muted-foreground ${index === 0 ? 'text-base' : ''}`}
               >

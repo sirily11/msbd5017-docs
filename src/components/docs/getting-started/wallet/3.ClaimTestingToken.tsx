@@ -2,12 +2,14 @@
 import { Button } from '@/components/shared/Button'
 import { StepItemComponent } from '@/components/step-item'
 import { axiomGemeni } from '@/lib/network'
-import { useWallet } from 'web3-connect-react'
+import { useAddresses, useBalance, useWallet } from 'web3-connect-react'
 
 const minimumBalance = 10
 
 export default function ClaimTestingToken({ session }: { session?: any }) {
-  const { chainId, balance, walletAddress } = useWallet()
+  const { chainId } = useWallet()
+  const { addresses } = useAddresses('ethereum')
+  const { balance } = useBalance('ethereum')
   const isAuth = session === undefined ? false : session.isAuth
   if (!isAuth) {
     return <></>
@@ -17,10 +19,18 @@ export default function ClaimTestingToken({ session }: { session?: any }) {
     return <></>
   }
 
+  if (!addresses) {
+    return <></>
+  }
+
+  if (!balance) {
+    return <></>
+  }
+
   return (
     <StepItemComponent
       step={2}
-      isDone={Number(balance) > minimumBalance}
+      isDone={Number(balance[0]) > minimumBalance}
       isLast
     >
       {Number(balance) < minimumBalance ? (
@@ -35,7 +45,7 @@ export default function ClaimTestingToken({ session }: { session?: any }) {
             <Button
               onClick={() => {
                 window.open(
-                  `https://faucet.gemini.axiomesh.io/home?address=${walletAddress}`,
+                  `https://faucet.gemini.axiomesh.io/home?address=${addresses[0]}`,
                   '_blank',
                 )
               }}

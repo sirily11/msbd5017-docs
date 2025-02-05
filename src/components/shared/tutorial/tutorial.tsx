@@ -73,7 +73,7 @@ export const Step = ({
         sticky && 'sticky top-0 z-10',
         isClickable && 'cursor-pointer',
         outputId === activeOutputId &&
-          '!rounded-l-none border-l-8 border-l-sky-600 transition-colors',
+          'rounded-l-none! border-l-8 border-l-sky-600 transition-colors',
       )}
       data-output-id={outputId}
       onClick={() => {
@@ -83,10 +83,10 @@ export const Step = ({
     >
       <CardContent className="p-4">
         <div className="flex items-center space-x-4">
-          <div className="flex-grow">{children}</div>
+          <div className="grow">{children}</div>
           {isClickable && (
             <motion.div
-              className="flex-shrink-0"
+              className="shrink-0"
               initial={{ x: -5, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
               transition={{ duration: 0.3 }}

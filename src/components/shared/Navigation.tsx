@@ -128,7 +128,7 @@ function NavigationGroup({
   )
 
   return (
-    <li className={clsx('relative mt-6', className)}>
+    <div className={clsx('relative mt-6', className)}>
       <motion.h2
         layout="position"
         className={clsx(
@@ -156,28 +156,29 @@ function NavigationGroup({
         </AnimatePresence>
         <ul role="list" className="border-l border-transparent pl-2">
           {group.links?.map((link, index) => {
-            return (
-              <motion.li key={index} layout="position" className="relative">
-                {'links' in link ? (
+            if ('links' in link) {
+              return (
+                <li key={index}>
                   <NavigationGroup
                     group={link}
                     level={level + 1}
-                    className={'!mt-1'}
+                    className="mt-1"
                   />
-                ) : (
-                  <NavLink
-                    href={link.href ?? ''}
-                    active={link.href === pathname}
-                  >
-                    {link.title}
-                  </NavLink>
-                )}
+                </li>
+              )
+            }
+
+            return (
+              <motion.li key={index} layout="position" className="relative">
+                <NavLink href={link.href ?? ''} active={link.href === pathname}>
+                  {link.title}
+                </NavLink>
               </motion.li>
             )
           })}
         </ul>
       </div>
-    </li>
+    </div>
   )
 }
 
@@ -186,11 +187,12 @@ export function Navigation(props: React.ComponentPropsWithoutRef<'nav'>) {
     <nav {...props}>
       <ul role="list">
         {navigation.map((group, groupIndex) => (
-          <NavigationGroup
-            key={group.title}
-            group={group}
-            className={groupIndex === 0 ? 'md:mt-0' : ''}
-          />
+          <li key={group.title}>
+            <NavigationGroup
+              group={group}
+              className={groupIndex === 0 ? 'md:mt-0' : ''}
+            />
+          </li>
         ))}
       </ul>
     </nav>

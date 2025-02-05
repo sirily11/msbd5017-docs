@@ -75,7 +75,7 @@ export function ExpandablePanels({ children }: Props) {
           </Tooltip>
         </div>
 
-        <div className="flex flex-grow flex-col gap-4 p-4 md:flex-row">
+        <div className="flex grow flex-col gap-4 p-4 md:flex-row">
           <AnimatePresence initial={false}>
             {leftOpen && (
               <motion.div
