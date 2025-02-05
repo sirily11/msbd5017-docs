@@ -7,11 +7,12 @@ import { type Section } from '@/components/shared/SectionProvider'
 
 import '@/styles/tailwind.css'
 import { session } from '@/actions/actions'
+import { config } from '@/components/config'
 
 export const metadata: Metadata = {
   title: {
-    template: 'MSBD5017 - %s',
-    default: 'MSBD5017 Document',
+    template: `${config.productName} - %s`,
+    default: `${config.productName} Document`,
   },
 }
 

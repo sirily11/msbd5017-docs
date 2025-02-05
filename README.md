@@ -1,3 +1,3 @@
-# MSBD5017 Docs
+# ChainLab Docs
 
-This repository contains the documents for the course MSBD5017.
+This repository contains the documents for the course ChainLab.

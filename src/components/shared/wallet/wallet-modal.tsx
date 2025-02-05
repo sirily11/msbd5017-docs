@@ -85,44 +85,38 @@ function WalletItem({
   }
 
   return (
-    <div
-      key={provider.metadata.name}
-      className={'h-[80px] w-full'}
-      style={{
-        listStyle: 'none',
-      }}
-    >
+    <div key={provider.metadata.name} className="h-[80px] w-full">
       <button
-        // disabled={!provider.isEnabled(sdk.walletProviders)}
         onClick={handleClick}
         className={
-          'bg-opacity-30 hover:bg-opacity-50 flex h-full w-full flex-row items-center rounded-[10px] bg-[#D1D5DB] p-[15px] pr-[35px] pb-[15px] pl-5 disabled:cursor-not-allowed'
+          'flex h-full w-full items-center rounded-xl bg-gray-100 px-6 py-4 transition-all duration-200 hover:cursor-pointer hover:bg-gray-200 hover:shadow-md disabled:cursor-not-allowed disabled:opacity-50'
         }
       >
-        <div className={'flex w-full flex-row justify-between'}>
-          <div className={'flex flex-row items-center space-x-2'}>
+        <div className="flex w-full items-center justify-between">
+          <div className="flex items-center space-x-3">
             <div
-              className={`flex h-8 w-8 items-center justify-center rounded-lg ${provider.metadata.name === 'MetaMask' ? 'bg-[#EAE0D7]' : 'bg-black'}`}
+              className={`flex h-10 w-10 items-center justify-center rounded-lg transition-transform duration-200 ${
+                provider.metadata.name === 'MetaMask'
+                  ? 'bg-[#FFF7F0]'
+                  : 'bg-black'
+              } group-hover:scale-105`}
             >
               {image}
             </div>
-            <label className={'text-sm font-bold'}>
+            <label className="text-base font-semibold text-gray-800">
               {provider.metadata.name} Wallet
             </label>
           </div>
-          {isLoading && <div className={'absolute right-5'}></div>}
-          {!provider.isEnabled(sdk.walletProviders) ? (
-            <div
-              className={'text-sm text-[#A0A8C0]'}
-              style={{
-                border: '1px solid #A0A8C0',
-                padding: '3px 8px',
-                borderRadius: 8,
-              }}
-            >
-              not installed
+          {isLoading && (
+            <div className="absolute right-5">
+              {/* Add a loading spinner here if needed */}
             </div>
-          ) : null}
+          )}
+          {!provider.isEnabled(sdk.walletProviders) && (
+            <span className="rounded-lg border border-gray-300 px-3 py-1 text-sm text-gray-500">
+              not installed
+            </span>
+          )}
         </div>
       </button>
     </div>
@@ -161,9 +155,13 @@ export function ConnectWalletModal({ closeModal, isSignedIn }: Props) {
             <div className={'mt-5 w-full space-y-5'}>
               {sdk?.walletProviders
                 .filter((p) => p.isVisible(false))
-                .map((p) => {
-                  return <WalletItem provider={p} closeModal={closeModal} />
-                })}
+                .map((p) => (
+                  <WalletItem
+                    key={p.metadata.name}
+                    provider={p}
+                    closeModal={closeModal}
+                  />
+                ))}
             </div>
           </>
         )}

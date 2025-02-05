@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation'
 
 import { Button } from '@/components/shared/Button'
 import { navigation } from '@/navigation'
+import { config } from '../config'
 
 function PageLink({
   label,
@@ -129,14 +130,8 @@ function SmallPrint() {
         &copy; Copyright {new Date().getFullYear()}. All rights reserved.
       </p>
       <div className="flex gap-4">
-        <SocialLink href="#" icon={XIcon}>
-          Follow us on X
-        </SocialLink>
-        <SocialLink href="#" icon={GitHubIcon}>
+        <SocialLink href={config.github} icon={GitHubIcon}>
           Follow us on GitHub
-        </SocialLink>
-        <SocialLink href="#" icon={DiscordIcon}>
-          Join our Discord server
         </SocialLink>
       </div>
     </div>
