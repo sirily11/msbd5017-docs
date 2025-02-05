@@ -89,7 +89,7 @@ export async function compile(
 }
 
 export async function session() {
-  const session = cookies().get(SessionKey)
+  const session = (await cookies()).get(SessionKey)
 
   return session?.value
     ? {
@@ -100,7 +100,7 @@ export async function session() {
 }
 
 export async function signOut() {
-  cookies().delete(SessionKey)
+  (await cookies()).delete(SessionKey)
 }
 
 export async function signIn(
@@ -115,7 +115,7 @@ export async function signIn(
     }
   }
 
-  cookies().set(walletAddress, JSON.stringify({ isAuth: true }), {
+  (await cookies()).set(walletAddress, JSON.stringify({ isAuth: true }), {
     maxAge: 60, // 1 minute
   })
   return {}
@@ -123,14 +123,14 @@ export async function signIn(
 
 export async function storeSession(walletAddress: string, session: any) {
   // check if session is valid
-  if (!cookies().has(walletAddress)) {
+  if (!(await cookies()).has(walletAddress)) {
     return {
       error: 'Invalid session',
     }
   }
 
-  cookies().delete(walletAddress)
-  cookies().set(SessionKey, JSON.stringify(session), {
+  (await cookies()).delete(walletAddress)
+  (await cookies()).set(SessionKey, JSON.stringify(session), {
     maxAge: 60 * 60 * 24 * 7, // 1 week
   })
   return {}

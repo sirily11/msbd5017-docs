@@ -19,16 +19,14 @@ const nextConfig = {
   pageExtensions: ['js', 'jsx', 'ts', 'tsx', 'mdx'],
   compiler: {
     removeConsole: {
-      exclude: ['error', "info"],
+      exclude: ['error', 'info'],
     },
   },
-  experimental: {
-    outputFileTracingIncludes: {
-      '/**/*': [
-        './src/app/**/*.mdx',
-        './node_modules/@openzeppelin/contracts/**/*.sol',
-      ],
-    },
+  outputFileTracingIncludes: {
+    '/**/*': [
+      './src/app/**/*.mdx',
+      './node_modules/@openzeppelin/contracts/**/*.sol',
+    ],
   },
   webpack: (config, options) => {
     config.plugins.push(new MDXMenuPlugin())
