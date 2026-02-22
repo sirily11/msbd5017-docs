@@ -98,7 +98,7 @@ const config: HardhatUserConfig = {
   },
   networks: {
     gemini: {
-      url: "https://rpc5.gemini.axiomesh.io",
+      url: "https://testnet.chainlab.fun",
       accounts: PRIVATE_KEY ? [process.env.PRIVATE_KEY!] : [],
     },
   },

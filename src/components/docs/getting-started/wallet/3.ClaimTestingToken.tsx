@@ -45,7 +45,7 @@ export default function ClaimTestingToken({ session }: { session?: any }) {
             <Button
               onClick={() => {
                 window.open(
-                  `https://faucet.gemini.axiomesh.io/home?address=${addresses[0]}`,
+                  `https://faucet.chainlab.fun/home?address=${addresses[0]}`,
                   '_blank',
                 )
               }}
