@@ -115,7 +115,7 @@ function WalletItem({
             </span>
           </div>
           {isLoading && (
-            <div className="h-5 w-5 animate-spin rounded-full border-2 border-gray-300 border-t-gray-800 dark:border-white/20 dark:border-t-white" />
+            <div className="h-5 w-5 animate-spin rounded-full border-2 border-gray-300 border-t-gray-800 dark:border-white/20 dark:border-t-white" role="status" aria-label="Connecting" />
           )}
           {!isLoading && !provider.isEnabled(sdk.walletProviders) && (
             <span className="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-500 dark:bg-white/10 dark:text-white/50">
@@ -129,6 +129,7 @@ function WalletItem({
               viewBox="0 0 24 24"
               stroke="currentColor"
               strokeWidth={2}
+              aria-hidden="true"
             >
               <path
                 strokeLinecap="round"

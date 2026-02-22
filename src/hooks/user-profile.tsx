@@ -77,7 +77,7 @@ export default function UserProfile({
           className="space-y-3"
         >
           <div className="rounded-2xl bg-gray-50 p-4 dark:bg-white/5">
-            <Label htmlFor="wallet" className="text-xs font-medium text-gray-400 dark:text-white/40">
+            <Label htmlFor="wallet" className="text-xs font-medium text-gray-500 dark:text-white/50">
               Wallet Address
             </Label>
             <div className="mt-1.5 flex items-center gap-2">
@@ -121,7 +121,7 @@ export default function UserProfile({
             </div>
           </div>
           <div className="rounded-2xl bg-gray-50 p-4 dark:bg-white/5">
-            <Label className="text-xs font-medium text-gray-400 dark:text-white/40">
+            <Label className="text-xs font-medium text-gray-500 dark:text-white/50">
               Balance
             </Label>
             <div className="mt-1.5 flex items-center gap-2">
