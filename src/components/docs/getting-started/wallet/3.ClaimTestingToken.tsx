@@ -4,7 +4,7 @@ import { StepItemComponent } from '@/components/step-item'
 import { chainlabTestnet } from '@/lib/network'
 import { useAddresses, useBalance, useWallet } from 'web3-connect-react'
 
-const minimumBalance = 10
+const minimumBalance = 0.5
 
 export default function ClaimTestingToken({ session }: { session?: any }) {
   const { chainId } = useWallet()
