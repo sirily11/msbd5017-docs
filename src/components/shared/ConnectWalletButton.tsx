@@ -38,7 +38,7 @@ export default function ConnectWalletButton({ session }: { session: any }) {
       <NativeModal
         openModal={openModal}
         closeModal={() => setOpenModal(false)}
-        className="w-full max-w-[800px]"
+        className="w-full max-w-[480px]"
       >
         <ConnectWalletModal
           isSignedIn={isAuth}

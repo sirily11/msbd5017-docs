@@ -5,5 +5,4 @@ export const axiomGemeni: SwitchToNetworkOptions = {
   rpcUrl: 'https://testnet.chainlab.fun',
   networkName: 'Axiomesh Gemini',
   symbol: 'AXC',
-  blockExplorerUrl: 'https://scan.gemini.axiomesh.io',
 }
