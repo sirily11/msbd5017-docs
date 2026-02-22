@@ -11,7 +11,7 @@ import {
 import { Button } from '@/components/ui/button'
 import { useRouter } from 'next/navigation'
 import UserProfile from '@/hooks/user-profile'
-import { axiomGemeni } from '@/lib/network'
+import { chainlabTestnet } from '@/lib/network'
 
 interface Props {
   closeModal: () => void
@@ -49,7 +49,7 @@ function WalletItem({
       await sdk
         .signIn({
           provider,
-          network: axiomGemeni,
+          network: chainlabTestnet,
           callbacks: {
             onSignedIn: async (walletAddress, provider, session) => {
               const { error } = await storeSession(walletAddress, session)
