@@ -11,6 +11,7 @@ import {
 import { Button } from '@/components/ui/button'
 import { useRouter } from 'next/navigation'
 import UserProfile from '@/hooks/user-profile'
+import { chainlabTestnet } from '@/lib/network'
 
 interface Props {
   closeModal: () => void
@@ -39,32 +40,37 @@ function WalletItem({
     className: 'rounded-lg h-5! w-5! object-cover!',
   })
 
-  const { sdk, signIn } = useWallet()
+  const { sdk } = useWallet()
   const [isLoading, setIsLoading] = useState(false)
 
   const onSignIn = useCallback(
     async (provider: AvailableProvider) => {
       setIsLoading(true)
-      await signIn(provider, {
-        onSignedIn: async (walletAddress, provider, session) => {
-          const { error } = await storeSession(walletAddress, session)
-          if (error) {
-            throw new Error(error)
-          }
-          window.location.reload()
-        },
-        getSignInData: async (address, provider) => {
-          const message = 'Sign In to MSBD 5017 website'
-          const signature = await provider.signMessage(message, {
-            forAuthentication: true,
-          })
-          const { error } = await serverSignIn(address, message, signature)
-          if (error) {
-            throw new Error(error)
-          }
-          return {}
-        },
-      })
+      await sdk
+        .signIn({
+          provider,
+          network: chainlabTestnet,
+          callbacks: {
+            onSignedIn: async (walletAddress, provider, session) => {
+              const { error } = await storeSession(walletAddress, session)
+              if (error) {
+                throw new Error(error)
+              }
+              window.location.reload()
+            },
+            getSignInData: async (address, provider) => {
+              const message = 'Sign In to MSBD 5017 website'
+              const signature = await provider.signMessage(message, {
+                forAuthentication: true,
+              })
+              const { error } = await serverSignIn(address, message, signature)
+              if (error) {
+                throw new Error(error)
+              }
+              return {}
+            },
+          },
+        })
         .catch((e) => {
           alert(e.message)
         })
@@ -85,37 +91,52 @@ function WalletItem({
   }
 
   return (
-    <div key={provider.metadata.name} className="h-[80px] w-full">
+    <div key={provider.metadata.name} className="w-full">
       <button
         onClick={handleClick}
+        disabled={isLoading}
         className={
-          'flex h-full w-full items-center rounded-xl bg-gray-100 px-6 py-4 transition-all duration-200 hover:cursor-pointer hover:bg-gray-200 hover:shadow-md disabled:cursor-not-allowed disabled:opacity-50'
+          'group flex w-full items-center rounded-2xl border border-gray-200/60 bg-white/80 px-5 py-4 backdrop-blur-sm transition-all duration-300 hover:cursor-pointer hover:border-gray-300 hover:bg-white hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-50 dark:border-white/10 dark:bg-white/5 dark:hover:border-white/20 dark:hover:bg-white/10'
         }
       >
         <div className="flex w-full items-center justify-between">
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center gap-4">
             <div
-              className={`flex h-10 w-10 items-center justify-center rounded-lg transition-transform duration-200 ${
+              className={`flex h-11 w-11 items-center justify-center rounded-xl transition-transform duration-300 ${
                 provider.metadata.name === 'MetaMask'
-                  ? 'bg-[#FFF7F0]'
-                  : 'bg-black'
-              } group-hover:scale-105`}
+                  ? 'bg-[#FFF7F0] dark:bg-[#FFF7F0]/10'
+                  : 'bg-gray-100 dark:bg-white/10'
+              } group-hover:scale-110`}
             >
               {image}
             </div>
-            <label className="text-base font-semibold text-gray-800">
-              {provider.metadata.name} Wallet
-            </label>
+            <span className="text-[15px] font-semibold tracking-tight text-gray-900 dark:text-white">
+              {provider.metadata.name}
+            </span>
           </div>
           {isLoading && (
-            <div className="absolute right-5">
-              {/* Add a loading spinner here if needed */}
-            </div>
+            <div className="h-5 w-5 animate-spin rounded-full border-2 border-gray-300 border-t-gray-800 dark:border-white/20 dark:border-t-white" role="status" aria-label="Connecting" />
           )}
-          {!provider.isEnabled(sdk.walletProviders) && (
-            <span className="rounded-lg border border-gray-300 px-3 py-1 text-sm text-gray-500">
-              not installed
+          {!isLoading && !provider.isEnabled(sdk.walletProviders) && (
+            <span className="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-500 dark:bg-white/10 dark:text-white/50">
+              Install
             </span>
+          )}
+          {!isLoading && provider.isEnabled(sdk.walletProviders) && (
+            <svg
+              className="h-5 w-5 text-gray-400 transition-transform duration-300 group-hover:translate-x-0.5 dark:text-white/30"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
+              aria-hidden="true"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M9 5l7 7-7 7"
+              />
+            </svg>
           )}
         </div>
       </button>
@@ -129,30 +150,40 @@ export function ConnectWalletModal({ closeModal, isSignedIn }: Props) {
   const { balance } = useBalance('ethereum')
 
   return (
-    <div className={'flex p-8'}>
-      <div
-        className={
-          'mx-auto flex w-full flex-col items-center justify-center space-y-5'
-        }
+    <div className="relative px-8 py-10">
+      <button
+        className="absolute top-6 right-6 flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 transition-colors duration-200 hover:bg-gray-200 dark:bg-white/10 dark:hover:bg-white/20"
+        onClick={() => {
+          closeModal()
+        }}
       >
-        <button
-          className={'absolute top-10 right-10'}
-          onClick={() => {
-            closeModal()
-          }}
-        >
-          <X />
-        </button>
+        <X className="h-4 w-4 text-gray-500 dark:text-white/60" />
+      </button>
+      <div className="mx-auto flex w-full max-w-md flex-col items-center">
         {!isSignedIn && (
           <>
-            <h1 className={'text-primary text-center text-2xl font-bold'}>
-              Sign In To MSBD 5017 Website
+            <div className="mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-500 to-purple-600 shadow-lg">
+              <svg
+                className="h-7 w-7 text-white"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={1.5}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M21 12a2.25 2.25 0 00-2.25-2.25H15a3 3 0 11-6 0H5.25A2.25 2.25 0 003 12m18 0v6a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 18v-6m18 0V9M3 12V9m18 0a2.25 2.25 0 00-2.25-2.25H5.25A2.25 2.25 0 013 9m18 0V6a2.25 2.25 0 00-2.25-2.25H5.25A2.25 2.25 0 013 6v3"
+                />
+              </svg>
+            </div>
+            <h1 className="mb-1 text-center text-xl font-bold tracking-tight text-gray-900 dark:text-white">
+              Connect Wallet
             </h1>
-            <p className={'text-center text-sm font-normal'}>
-              Click on the wallet provider you would like to use to sign in to
-              the MSBD 5017 website
+            <p className="mb-8 text-center text-sm leading-relaxed text-gray-500 dark:text-white/50">
+              Choose a wallet to sign in to MSBD 5017
             </p>
-            <div className={'mt-5 w-full space-y-5'}>
+            <div className="w-full space-y-3">
               {sdk?.walletProviders
                 .filter((p) => p.isVisible(false))
                 .map((p) => (
@@ -163,6 +194,9 @@ export function ConnectWalletModal({ closeModal, isSignedIn }: Props) {
                   />
                 ))}
             </div>
+            <p className="mt-6 text-center text-xs leading-relaxed text-gray-400 dark:text-white/30">
+              By connecting, you agree to sign a message to verify your identity.
+            </p>
           </>
         )}
 

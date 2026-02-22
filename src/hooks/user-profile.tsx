@@ -47,20 +47,19 @@ export default function UserProfile({
 
   return (
     <div className="mx-auto w-full">
-      <h2 className="mb-6 text-center text-2xl font-bold">User Profile</h2>
-      <div className="grid gap-6">
+      <div className="grid gap-5">
         <motion.div
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.3 }}
-          className="flex flex-col items-center gap-4"
+          transition={{ duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
+          className="flex flex-col items-center gap-3"
         >
           {userWalletAddress && (
-            <WalletAvatarImage walletAddress={userWalletAddress} size={120} />
+            <WalletAvatarImage walletAddress={userWalletAddress} size={80} />
           )}
           <div className="text-center">
-            <h3 className="text-xl font-semibold">
-              {userName || 'Anonymous User'}
+            <h3 className="text-lg font-semibold tracking-tight">
+              {userName || 'Connected'}
             </h3>
             {userEmail && (
               <p className="text-sm text-muted-foreground">{userEmail}</p>
@@ -70,24 +69,28 @@ export default function UserProfile({
         <motion.div
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.3, delay: 0.1 }}
-          className="space-y-4"
+          transition={{
+            duration: 0.4,
+            delay: 0.1,
+            ease: [0.25, 0.46, 0.45, 0.94],
+          }}
+          className="space-y-3"
         >
-          <div className="space-y-2">
-            <Label htmlFor="wallet" className="text-sm font-medium">
+          <div className="rounded-2xl bg-gray-50 p-4 dark:bg-white/5">
+            <Label htmlFor="wallet" className="text-xs font-medium text-gray-500 dark:text-white/50">
               Wallet Address
             </Label>
-            <div className="flex items-center gap-2">
+            <div className="mt-1.5 flex items-center gap-2">
               <div
                 id="wallet"
-                className="flex-1 rounded-md bg-muted px-3 py-2 font-mono text-sm"
+                className="flex-1 truncate font-mono text-sm text-gray-900 dark:text-white"
               >
                 {userWalletAddress}
               </div>
               <Button
                 size="icon"
-                variant="outline"
-                className="shrink-0 transition-all duration-200 ease-in-out"
+                variant="ghost"
+                className="h-8 w-8 shrink-0 rounded-lg transition-all duration-200 ease-in-out hover:bg-gray-200 dark:hover:bg-white/10"
                 onClick={copyToClipboard}
               >
                 <AnimatePresence mode="wait" initial={false}>
@@ -117,11 +120,15 @@ export default function UserProfile({
               </Button>
             </div>
           </div>
-          <div className="space-y-2">
-            <Label className="text-sm font-medium">Wallet Balance</Label>
-            <div className="flex items-center gap-2 rounded-md bg-muted px-3 py-2">
-              <WalletIcon className="h-5 w-5 text-primary" />
-              <span className="text-lg font-semibold">{userWalletBalance}</span>
+          <div className="rounded-2xl bg-gray-50 p-4 dark:bg-white/5">
+            <Label className="text-xs font-medium text-gray-500 dark:text-white/50">
+              Balance
+            </Label>
+            <div className="mt-1.5 flex items-center gap-2">
+              <WalletIcon className="h-4 w-4 text-gray-400 dark:text-white/40" />
+              <span className="text-lg font-semibold tracking-tight text-gray-900 dark:text-white">
+                {userWalletBalance}
+              </span>
             </div>
           </div>
         </motion.div>
@@ -129,10 +136,18 @@ export default function UserProfile({
       <motion.div
         initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.3, delay: 0.2 }}
+        transition={{
+          duration: 0.4,
+          delay: 0.2,
+          ease: [0.25, 0.46, 0.45, 0.94],
+        }}
         className="mt-6"
       >
-        <Button variant="destructive" onClick={onSignOut} className="w-full">
+        <Button
+          variant="destructive"
+          onClick={onSignOut}
+          className="w-full rounded-xl py-3 text-sm font-medium"
+        >
           <LogOutIcon className="mr-2 h-4 w-4" />
           Sign Out
         </Button>

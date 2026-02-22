@@ -1,9 +1,8 @@
 import { SwitchToNetworkOptions } from 'web3-connect-react'
 
-export const axiomGemeni: SwitchToNetworkOptions = {
+export const chainlabTestnet: SwitchToNetworkOptions = {
   chainId: 23413,
   rpcUrl: 'https://testnet.chainlab.fun',
-  networkName: 'Axiomesh Gemini',
-  symbol: 'AXC',
-  blockExplorerUrl: 'https://scan.gemini.axiomesh.io',
+  networkName: 'ChainLab Testnet',
+  symbol: 'ETH',
 }

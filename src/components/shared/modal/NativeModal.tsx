@@ -51,7 +51,7 @@ export function NativeModal({
     <dialog
       ref={ref as any}
       onCancel={closeModal}
-      className={`open:animate-modalf absolute inset-0 m-auto w-fit max-w-[90%] rounded-[32px] dark:bg-[#1C1F26] ${className}`}
+      className={`open:animate-modalf absolute inset-0 m-auto w-fit max-w-[90%] overflow-hidden rounded-3xl border border-gray-200/50 bg-white/95 shadow-2xl backdrop-blur-xl dark:border-white/10 dark:bg-[#1C1F26]/95 ${className}`}
     >
       {children}
     </dialog>

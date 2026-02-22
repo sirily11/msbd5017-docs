@@ -1,7 +1,7 @@
 'use client'
 import { Button } from '@/components/shared/Button'
 import { StepItemComponent } from '@/components/step-item'
-import { axiomGemeni } from '@/lib/network'
+import { chainlabTestnet } from '@/lib/network'
 import { useWallet } from 'web3-connect-react'
 
 export default function ConnectToTargetNetwork({ session }: { session?: any }) {
@@ -12,24 +12,24 @@ export default function ConnectToTargetNetwork({ session }: { session?: any }) {
   }
 
   return (
-    <StepItemComponent step={1} isDone={chainId === axiomGemeni.chainId}>
+    <StepItemComponent step={1} isDone={chainId === chainlabTestnet.chainId}>
       {chainId && (
         <div className="flex w-full flex-row flex-wrap items-center justify-between">
-          {chainId === axiomGemeni.chainId ? (
+          {chainId === chainlabTestnet.chainId ? (
             <div>
               <span className="font-medium">
-                You are connected to the {axiomGemeni.networkName} network.
+                You are connected to the {chainlabTestnet.networkName} network.
               </span>
             </div>
           ) : (
             <>
               <span>
                 You are on the different network. Please switch to the{' '}
-                {axiomGemeni.networkName} network.
+                {chainlabTestnet.networkName} network.
               </span>
               <Button
                 onClick={() => {
-                  switchNetwork(axiomGemeni)
+                  switchNetwork(chainlabTestnet)
                 }}
               >
                 Switch network

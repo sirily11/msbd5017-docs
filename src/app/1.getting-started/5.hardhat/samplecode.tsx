@@ -97,7 +97,7 @@ const config: HardhatUserConfig = {
     target: "ethers-v6",
   },
   networks: {
-    gemini: {
+    chainlabTestnet: {
       url: "https://testnet.chainlab.fun",
       accounts: PRIVATE_KEY ? [process.env.PRIVATE_KEY!] : [],
     },

@@ -12,7 +12,7 @@ import {
 } from 'web3-connect-react'
 import { signOut } from '@/actions/actions'
 import { useRouter } from 'next/navigation'
-import { axiomGemeni } from '@/lib/network'
+import { chainlabTestnet } from '@/lib/network'
 
 function ThemeWatcher() {
   let { resolvedTheme, setTheme } = useTheme()
