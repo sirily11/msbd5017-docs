@@ -181,7 +181,7 @@ export function ConnectWalletModal({ closeModal, isSignedIn }: Props) {
               Connect Wallet
             </h1>
             <p className="mb-8 text-center text-sm leading-relaxed text-gray-500 dark:text-white/50">
-              Choose a wallet to sign in to MSBD 5017
+              Choose a wallet to sign in to Chainlab
             </p>
             <div className="w-full space-y-3">
               {sdk?.walletProviders
