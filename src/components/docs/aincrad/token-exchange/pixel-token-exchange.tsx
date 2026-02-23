@@ -32,6 +32,7 @@ const font = Pixelify_Sans({
 })
 
 const TOKEN_SUPPLY = BigInt('1000000000000000000000000') // 1,000,000 tokens (18 decimals)
+const ONE_TOKEN = BigInt('1000000000000000000') // 1 token (18 decimals)
 
 async function deployPrecompiled(
   vm: VM,
@@ -123,7 +124,6 @@ export default function PixelTokenExchangeComponent() {
 
   const refreshPrices = async () => {
     if (!vm || !contractAddress || !tokenAAddress || !tokenBAddress) return
-    const oneToken = BigInt('1000000000000000000') // 1 token (18 decimals)
     const priceIface = new Interface([
       'function getTokenPrice(address,uint256) view returns (uint256)',
       'function getTokenEthPrice(address,uint256) view returns (uint256)',
@@ -132,7 +132,7 @@ export default function PixelTokenExchangeComponent() {
     try {
       const aToBData = priceIface.encodeFunctionData('getTokenPrice', [
         tokenAAddress.toString(),
-        oneToken.toString(),
+        ONE_TOKEN.toString(),
       ])
       const aToBResult = await vm.evm.runCall({
         to: contractAddress,
@@ -154,7 +154,7 @@ export default function PixelTokenExchangeComponent() {
     try {
       const bToAData = priceIface.encodeFunctionData('getTokenPrice', [
         tokenBAddress.toString(),
-        oneToken.toString(),
+        ONE_TOKEN.toString(),
       ])
       const bToAResult = await vm.evm.runCall({
         to: contractAddress,
@@ -176,7 +176,7 @@ export default function PixelTokenExchangeComponent() {
     try {
       const aEthData = priceIface.encodeFunctionData('getTokenEthPrice', [
         tokenAAddress.toString(),
-        oneToken.toString(),
+        ONE_TOKEN.toString(),
       ])
       const aEthResult = await vm.evm.runCall({
         to: contractAddress,
@@ -198,7 +198,7 @@ export default function PixelTokenExchangeComponent() {
     try {
       const bEthData = priceIface.encodeFunctionData('getTokenEthPrice', [
         tokenBAddress.toString(),
-        oneToken.toString(),
+        ONE_TOKEN.toString(),
       ])
       const bEthResult = await vm.evm.runCall({
         to: contractAddress,
@@ -450,10 +450,10 @@ export default function PixelTokenExchangeComponent() {
               1 Col = {priceBtoA} Yrd
             </p>
             <p className="pixel-text mb-1 text-sm">
-              1 Yrd = {priceAtoEth} ETH (wei)
+              1 Yrd = {priceAtoEth} wei
             </p>
             <p className="pixel-text text-sm">
-              1 Col = {priceBtoEth} ETH (wei)
+              1 Col = {priceBtoEth} wei
             </p>
             <Button
               onClick={refreshPrices}
