@@ -86,6 +86,10 @@ export default function PixelTokenExchangeComponent() {
   const [dialogContent, setDialogContent] = useState({ title: '', content: '' })
   const [isDeploying, setIsDeploying] = useState(false)
   const [swapperAccount] = useState(() => HDNodeWallet.createRandom())
+  const [priceAtoB, setPriceAtoB] = useState('—')
+  const [priceBtoA, setPriceBtoA] = useState('—')
+  const [priceAtoEth, setPriceAtoEth] = useState('—')
+  const [priceBtoEth, setPriceBtoEth] = useState('—')
 
   const showMessage = (title: string, content: string) => {
     setDialogContent({ title, content })
@@ -114,6 +118,103 @@ export default function PixelTokenExchangeComponent() {
       setBalanceB(balB)
     } catch (error) {
       console.error('Error refreshing balances:', error)
+    }
+  }
+
+  const refreshPrices = async () => {
+    if (!vm || !contractAddress || !tokenAAddress || !tokenBAddress) return
+    const oneToken = BigInt('1000000000000000000') // 1 token (18 decimals)
+    const priceIface = new Interface([
+      'function getTokenPrice(address,uint256) view returns (uint256)',
+      'function getTokenEthPrice(address,uint256) view returns (uint256)',
+    ])
+
+    try {
+      const aToBData = priceIface.encodeFunctionData('getTokenPrice', [
+        tokenAAddress.toString(),
+        oneToken.toString(),
+      ])
+      const aToBResult = await vm.evm.runCall({
+        to: contractAddress,
+        data: hexToBytes(aToBData as `0x${string}`),
+      })
+      if (!aToBResult.execResult.exceptionError) {
+        const decoded = priceIface.decodeFunctionResult(
+          'getTokenPrice',
+          bytesToHex(aToBResult.execResult.returnValue),
+        )
+        setPriceAtoB(decoded[0].toString())
+      } else {
+        setPriceAtoB('—')
+      }
+    } catch {
+      setPriceAtoB('—')
+    }
+
+    try {
+      const bToAData = priceIface.encodeFunctionData('getTokenPrice', [
+        tokenBAddress.toString(),
+        oneToken.toString(),
+      ])
+      const bToAResult = await vm.evm.runCall({
+        to: contractAddress,
+        data: hexToBytes(bToAData as `0x${string}`),
+      })
+      if (!bToAResult.execResult.exceptionError) {
+        const decoded = priceIface.decodeFunctionResult(
+          'getTokenPrice',
+          bytesToHex(bToAResult.execResult.returnValue),
+        )
+        setPriceBtoA(decoded[0].toString())
+      } else {
+        setPriceBtoA('—')
+      }
+    } catch {
+      setPriceBtoA('—')
+    }
+
+    try {
+      const aEthData = priceIface.encodeFunctionData('getTokenEthPrice', [
+        tokenAAddress.toString(),
+        oneToken.toString(),
+      ])
+      const aEthResult = await vm.evm.runCall({
+        to: contractAddress,
+        data: hexToBytes(aEthData as `0x${string}`),
+      })
+      if (!aEthResult.execResult.exceptionError) {
+        const decoded = priceIface.decodeFunctionResult(
+          'getTokenEthPrice',
+          bytesToHex(aEthResult.execResult.returnValue),
+        )
+        setPriceAtoEth(decoded[0].toString())
+      } else {
+        setPriceAtoEth('—')
+      }
+    } catch {
+      setPriceAtoEth('—')
+    }
+
+    try {
+      const bEthData = priceIface.encodeFunctionData('getTokenEthPrice', [
+        tokenBAddress.toString(),
+        oneToken.toString(),
+      ])
+      const bEthResult = await vm.evm.runCall({
+        to: contractAddress,
+        data: hexToBytes(bEthData as `0x${string}`),
+      })
+      if (!bEthResult.execResult.exceptionError) {
+        const decoded = priceIface.decodeFunctionResult(
+          'getTokenEthPrice',
+          bytesToHex(bEthResult.execResult.returnValue),
+        )
+        setPriceBtoEth(decoded[0].toString())
+      } else {
+        setPriceBtoEth('—')
+      }
+    } catch {
+      setPriceBtoEth('—')
     }
   }
 
@@ -204,9 +305,10 @@ export default function PixelTokenExchangeComponent() {
     setup()
   }, [compilerOutput, account, vm])
 
-  // Refresh balances when contracts are deployed
+  // Refresh balances and prices when contracts are deployed
   useEffect(() => {
     refreshBalances()
+    refreshPrices()
   }, [contractAddress, tokenAAddress, tokenBAddress, vm, account])
 
   const addLiquidity = async () => {
@@ -245,6 +347,7 @@ export default function PixelTokenExchangeComponent() {
       })
 
       await refreshBalances()
+      await refreshPrices()
       setLiquidityAmountA('')
       setLiquidityAmountB('')
       showMessage(
@@ -287,6 +390,7 @@ export default function PixelTokenExchangeComponent() {
       })
 
       await refreshBalances()
+      await refreshPrices()
       setSwapAmount('')
       const fromToken = swapDirection === 'AtoB' ? 'Yrd' : 'Col'
       const toToken = swapDirection === 'AtoB' ? 'Col' : 'Yrd'
@@ -332,6 +436,34 @@ export default function PixelTokenExchangeComponent() {
             </>
           )}
         </div>
+
+        {/* Token Prices */}
+        {contractAddress && (
+          <div className="wooden-frame mb-4 p-4">
+            <h2 className="pixel-text mt-0! mb-2 text-2xl text-yellow-400">
+              Token Prices
+            </h2>
+            <p className="pixel-text mb-1 text-sm">
+              1 Yrd = {priceAtoB} Col
+            </p>
+            <p className="pixel-text mb-1 text-sm">
+              1 Col = {priceBtoA} Yrd
+            </p>
+            <p className="pixel-text mb-1 text-sm">
+              1 Yrd = {priceAtoEth} ETH (wei)
+            </p>
+            <p className="pixel-text text-sm">
+              1 Col = {priceBtoEth} ETH (wei)
+            </p>
+            <Button
+              onClick={refreshPrices}
+              className="pixel-button mt-2"
+              disabled={isCompiling || isDeploying}
+            >
+              Refresh Prices
+            </Button>
+          </div>
+        )}
 
         {/* Add Liquidity */}
         <div className="wooden-frame mb-4 p-4">

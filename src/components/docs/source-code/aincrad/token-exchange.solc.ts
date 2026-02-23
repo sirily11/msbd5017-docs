@@ -68,6 +68,40 @@ contract TokenExchange {
     ) external returns (uint amountOut) {
         // TODO: implement
     }
+
+    /**
+     * Get the price of a token in terms of the other token.
+     * For example, getTokenPrice(tokenA, 1e18) returns how many tokenB
+     * you would receive for 1 tokenA.
+     *
+     * Steps:
+     * 1. Build the path [token, otherToken]
+     * 2. Call router.getAmountsOut(amountIn, path)
+     * 3. Return amounts[1]
+     */
+    function getTokenPrice(
+        address token,
+        uint amountIn
+    ) external view returns (uint amountOut) {
+        // TODO: implement
+    }
+
+    /**
+     * Get the price of a token in ETH.
+     * Uses router.WETH() to determine the WETH address, then queries
+     * the price via the path [token, WETH].
+     *
+     * Steps:
+     * 1. Build the path [token, router.WETH()]
+     * 2. Call router.getAmountsOut(amountIn, path)
+     * 3. Return amounts[1]
+     */
+    function getTokenEthPrice(
+        address token,
+        uint amountIn
+    ) external view returns (uint ethAmount) {
+        // TODO: implement
+    }
 }
 `
 
@@ -157,6 +191,34 @@ contract TokenExchange {
             amountIn,
             amountOut
         );
+    }
+
+    function getTokenPrice(
+        address token,
+        uint amountIn
+    ) external view returns (uint amountOut) {
+        address otherToken = token == tokenA ? tokenB : tokenA;
+
+        address[] memory path = new address[](2);
+        path[0] = token;
+        path[1] = otherToken;
+
+        uint[] memory amounts = router.getAmountsOut(amountIn, path);
+        amountOut = amounts[1];
+    }
+
+    function getTokenEthPrice(
+        address token,
+        uint amountIn
+    ) external view returns (uint ethAmount) {
+        address weth = router.WETH();
+
+        address[] memory path = new address[](2);
+        path[0] = token;
+        path[1] = weth;
+
+        uint[] memory amounts = router.getAmountsOut(amountIn, path);
+        ethAmount = amounts[1];
     }
 }
 `

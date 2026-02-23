@@ -34,6 +34,16 @@ The exchange operates on the **Automated Market Maker (AMM)** model used by Unis
    - Transfer the received tokens back to the caller
    - Emit a `TokensSwapped` event
 
+3. `function getTokenPrice(address token, uint amountIn) external view returns (uint amountOut)`
+   - Build the path `[token, otherToken]` where `otherToken` is the other token in the pair
+   - Call `router.getAmountsOut(amountIn, path)` to query the current exchange rate
+   - Return the expected output amount
+
+4. `function getTokenEthPrice(address token, uint amountIn) external view returns (uint ethAmount)`
+   - Build the path `[token, router.WETH()]` to route through the WETH pair
+   - Call `router.getAmountsOut(amountIn, path)` to query the current ETH price
+   - Return the expected ETH amount
+
 ## Events
 
 `event LiquidityAdded(address indexed provider, uint amountA, uint amountB, uint liquidity);`
@@ -71,6 +81,13 @@ function swapExactTokensForTokens(
     address to,
     uint deadline
 ) external returns (uint[] memory amounts);
+
+function getAmountsOut(
+    uint amountIn,
+    address[] calldata path
+) external view returns (uint[] memory amounts);
+
+function WETH() external pure returns (address);
 ```
 
 ## Hints
@@ -80,6 +97,8 @@ function swapExactTokensForTokens(
 - The swap path is an array of token addresses: `[tokenIn, tokenOut]`.
 - For `amountAMin` and `amountBMin` in `addLiquidity`, you can use `0` to accept any amount.
 - The `deadline` parameter can be set to `block.timestamp` to execute immediately.
+- Use `router.getAmountsOut(amountIn, path)` to query the expected output without executing a swap.
+- Use `router.WETH()` to get the WETH token address for ETH price queries.
 
 # Code
 
