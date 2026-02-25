@@ -6,6 +6,7 @@ import {
   decodeRevertMessage,
   deployContract,
 } from '@/context/solidityContext.utils'
+import { trackCodeExecution } from '@/lib/analytics'
 import { Address, hexToBytes } from '@ethereumjs/util'
 import { VM } from '@ethereumjs/vm'
 import { defaultAbiCoder as AbiCoder, Interface } from '@ethersproject/abi'
@@ -48,6 +49,7 @@ export default function Example1Executor() {
   const deployAndRun = useCallback(async () => {
     setIsRunning(true)
     setShouldAnimate(false)
+    const startTime = performance.now()
 
     try {
       if (compilerOutput === null || !account || !vm) {
@@ -74,7 +76,9 @@ export default function Example1Executor() {
       })
       setPreviousResult(result)
       setResult(newResult)
+      trackCodeExecution('HelloWorld', performance.now() - startTime, true)
     } catch (e: any) {
+      trackCodeExecution('HelloWorld', performance.now() - startTime, false)
       alert(e.message)
     } finally {
       setIsRunning(false)

@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { useSolidity } from '@/context/solidityContext'
+import { trackCodeExecution } from '@/lib/analytics'
 import { Loader2, RefreshCw, Trash } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { useAddresses, useWallet } from 'web3-connect-react'
@@ -23,6 +24,7 @@ export default function ContractInteract() {
     if (!sdk || !sdk.provider) {
       return
     }
+    const startTime = performance.now()
     try {
       setIsDeploying(true)
       const contract = compilerOutput?.contracts['contract.sol']?.['MyToken']
@@ -40,7 +42,9 @@ export default function ContractInteract() {
       sessionStorage.setItem(ABI_KEY, JSON.stringify(contract.abi))
       setContractAddress(address)
       setAbi(contract.abi)
+      trackCodeExecution('MyToken:deploy', performance.now() - startTime, true)
     } catch (error: any) {
+      trackCodeExecution('MyToken:deploy', performance.now() - startTime, false)
       console.error(error)
       alert(error.message)
     }
@@ -157,6 +161,7 @@ export function InteractArea({
     if (!abi) {
       return
     }
+    const startTime = performance.now()
     try {
       setIsMinting(true)
       await sdk.callContractMethod({
@@ -166,7 +171,9 @@ export function InteractArea({
         params: [addresses[0], value],
       })
       await getBalance()
+      trackCodeExecution('MyToken:mint', performance.now() - startTime, true)
     } catch (error: any) {
+      trackCodeExecution('MyToken:mint', performance.now() - startTime, false)
       console.error(error)
       alert(error.message)
     } finally {
