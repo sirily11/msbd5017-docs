@@ -1,9 +1,13 @@
 import { type Metadata } from 'next'
 import glob from 'fast-glob'
+import { GoogleAnalytics } from '@next/third-parties/google'
+import { Suspense } from 'react'
 
 import { Providers } from '@/app/providers'
 import { Layout } from '@/components/shared/Layout'
 import { type Section } from '@/components/shared/SectionProvider'
+import { AnalyticsPageTracker } from '@/components/analytics/AnalyticsPageTracker'
+import { GA_MEASUREMENT_ID } from '@/lib/analytics'
 
 import '@/styles/tailwind.css'
 import { session } from '@/actions/actions'
@@ -41,7 +45,11 @@ export default async function RootLayout({
             </Layout>
           </div>
         </Providers>
+        <Suspense fallback={null}>
+          <AnalyticsPageTracker />
+        </Suspense>
       </body>
+      {GA_MEASUREMENT_ID && <GoogleAnalytics gaId={GA_MEASUREMENT_ID} />}
     </html>
   )
 }
