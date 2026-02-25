@@ -33,16 +33,17 @@ export async function compile(
 
     const output = solc.compile(JSON.stringify(input), {
       import: (url: string) => {
-        const filePath = path.join(process.cwd(), 'node_modules', url)
-        if (fs.existsSync(filePath)) {
-          const content = fs.readFileSync(
-            path.join(process.cwd(), 'node_modules', url),
-            'utf8',
-          )
-          return { contents: content }
-        } else {
-          return { error: `File not found: ${url}` }
+        const searchPaths = [
+          path.join(process.cwd(), 'node_modules', url),
+          path.join(process.cwd(), 'src', 'contracts', url),
+        ]
+        for (const filePath of searchPaths) {
+          if (fs.existsSync(filePath)) {
+            const content = fs.readFileSync(filePath, 'utf8')
+            return { contents: content }
+          }
         }
+        return { error: `File not found: ${url}` }
       },
     })
     const result = JSON.parse(output)
