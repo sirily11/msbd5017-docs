@@ -40,7 +40,7 @@ async function deployPrecompiled(
   bytecode: string,
   params: { types: any[]; values: unknown[] },
 ) {
-  return await deployContract(vm, privateKey, bytecode, params)
+  return await deployContract(vm, privateKey, bytecode, params, 10_000_000)
 }
 
 async function callFunction(
@@ -283,6 +283,7 @@ export default function PixelTokenExchangeComponent() {
               tokenB.toString(),
             ],
           },
+          10_000_000,
         )
         setContractAddress(exchangeAddr)
 
