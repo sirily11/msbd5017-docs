@@ -1,4 +1,4 @@
-import Link from 'next/link'
+import Link from '@/components/shared/Link'
 import clsx from 'clsx'
 
 import { Feedback } from '@/components/shared/Feedback'
