@@ -69,8 +69,8 @@ function WalletItem({
             },
           },
         })
-        await sdk.switchToNetwork(chainlabTestnet).catch(() => {
-          console.error('Failed to switch to ChainLab Testnet')
+        await sdk.switchToNetwork(chainlabTestnet).catch((err) => {
+          console.error('Failed to switch to ChainLab Testnet:', err)
         })
         window.location.reload()
       } catch (e: any) {
