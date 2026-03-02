@@ -7,12 +7,10 @@ import {
   MetaMaskProvider,
   OKXProvider,
   WalletContextProvider,
-  WalletConnectProvider,
   PhantomProvider,
 } from 'web3-connect-react'
 import { signOut } from '@/actions/actions'
 import { useRouter } from 'next/navigation'
-import { chainlabTestnet } from '@/lib/network'
 
 function ThemeWatcher() {
   let { resolvedTheme, setTheme } = useTheme()
