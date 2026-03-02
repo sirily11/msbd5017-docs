@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useRef } from 'react'
-import Link from 'next/link'
+import Link from '@/components/shared/Link'
 import { useInView } from 'framer-motion'
 
 import { useSectionStore } from '@/components/shared/SectionProvider'
