@@ -23,4 +23,5 @@ yarn-error.log*
 .env
 .next
 src/navigation/navigation.ts
+src/mdx/search-data.json
 .idea

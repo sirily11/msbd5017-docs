@@ -30,7 +30,7 @@ const cssVariablesTheme = createCssVariablesTheme({
   fontStyle: true,
 })
 
-let highlighter
+let highlighterPromise
 
 function escapeHtml(str) {
   return str
@@ -64,13 +64,14 @@ function renderToken(token) {
 
 function rehypeShiki() {
   return async (tree) => {
-    highlighter =
-      highlighter ??
-      (await createHighlighter({
+    highlighterPromise =
+      highlighterPromise ??
+      createHighlighter({
         themes: [cssVariablesTheme],
         langs: Object.keys(bundledLanguages),
-      }))
+      })
 
+    let highlighter = await highlighterPromise
     visit(tree, 'element', (node) => {
       if (node.tagName === 'pre' && node.children[0]?.tagName === 'code') {
         let codeNode = node.children[0]
