@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Pixelify_Sans } from 'next/font/google'
+import localFont from 'next/font/local'
 import { useSolidity } from '@/context/solidityContext'
 import { VM } from '@ethereumjs/vm'
 import { Address, bytesToHex, hexToBytes, zeroAddress } from '@ethereumjs/util'
@@ -23,8 +23,8 @@ import { LegacyTransaction } from '@ethereumjs/tx'
 import './style.css'
 import { Log } from '@ethereumjs/evm'
 
-const font = Pixelify_Sans({
-  subsets: ['latin'],
+const font = localFont({
+  src: '../../../../../public/fonts/PixelifySans.ttf',
 })
 
 type Quest = {

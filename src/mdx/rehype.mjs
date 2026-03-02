@@ -2,7 +2,11 @@ import { slugifyWithCounter } from '@sindresorhus/slugify'
 import * as acorn from 'acorn'
 import { toString } from 'mdast-util-to-string'
 import { mdxAnnotations } from 'mdx-annotations'
-import shiki from 'shiki'
+import {
+  createHighlighter,
+  createCssVariablesTheme,
+  bundledLanguages,
+} from 'shiki'
 import { visit } from 'unist-util-visit'
 import rehypeSlug from 'rehype-slug'
 
@@ -19,12 +23,53 @@ function rehypeParseCodeBlocks() {
   }
 }
 
+const cssVariablesTheme = createCssVariablesTheme({
+  name: 'css-variables',
+  variablePrefix: '--shiki-',
+  variableDefaults: {},
+  fontStyle: true,
+})
+
 let highlighter
+
+function escapeHtml(str) {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+}
+
+const validCssColor = /^(?:var\(--[\w-]+\)|#[\da-fA-F]{3,8}|[\w]+)$/
+
+const FONT_STYLE_ITALIC = 1
+const FONT_STYLE_BOLD = 2
+const FONT_STYLE_UNDERLINE = 4
+
+function renderToken(token) {
+  let parts = []
+  if (token.color && validCssColor.test(token.color)) {
+    parts.push(`color:${token.color}`)
+  }
+  if (token.fontStyle) {
+    if (token.fontStyle & FONT_STYLE_ITALIC) parts.push('font-style:italic')
+    if (token.fontStyle & FONT_STYLE_BOLD) parts.push('font-weight:bold')
+    if (token.fontStyle & FONT_STYLE_UNDERLINE) parts.push('text-decoration:underline')
+  }
+  if (parts.length > 0) {
+    return `<span style="${parts.join(';')}">${escapeHtml(token.content)}</span>`
+  }
+  return `<span>${escapeHtml(token.content)}</span>`
+}
 
 function rehypeShiki() {
   return async (tree) => {
     highlighter =
-      highlighter ?? (await shiki.getHighlighter({ theme: 'css-variables' }))
+      highlighter ??
+      (await createHighlighter({
+        themes: [cssVariablesTheme],
+        langs: Object.keys(bundledLanguages),
+      }))
 
     visit(tree, 'element', (node) => {
       if (node.tagName === 'pre' && node.children[0]?.tagName === 'code') {
@@ -34,18 +79,17 @@ function rehypeShiki() {
         node.properties.code = textNode.value
 
         if (node.properties.language) {
-          let tokens = highlighter.codeToThemedTokens(
-            textNode.value,
-            node.properties.language,
-          )
-
-          textNode.value = shiki.renderToHtml(tokens, {
-            elements: {
-              pre: ({ children }) => children,
-              code: ({ children }) => children,
-              line: ({ children }) => `<span>${children}</span>`,
-            },
+          let tokens = highlighter.codeToTokensBase(textNode.value, {
+            lang: node.properties.language,
+            theme: 'css-variables',
           })
+
+          textNode.value = tokens
+            .map(
+              (line) =>
+                `<span>${line.map(renderToken).join('')}</span>`,
+            )
+            .join('\n')
         }
       }
     })

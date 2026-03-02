@@ -1,5 +1,5 @@
 import { Monaco } from '@monaco-editor/react'
-import { IDisposable, languages } from 'monaco-editor'
+import { editor, IDisposable, IPosition, languages } from 'monaco-editor'
 
 let hasBeenInitialized = false
 export function addSolidityIntellisense(monaco: Monaco) {
@@ -190,7 +190,7 @@ export function addSolidityIntellisense(monaco: Monaco) {
 
   // Configure auto-completion
   monaco.languages.registerCompletionItemProvider('sol', {
-    provideCompletionItems: (model, position) => {
+    provideCompletionItems: (model: editor.ITextModel, position: IPosition) => {
       const word = model.getWordUntilPosition(position)
       const range = {
         startLineNumber: position.lineNumber,
@@ -266,7 +266,7 @@ export function addSolidityABIIntellisense(monaco: Monaco, abi: any[]) {
   const completionProvider = monaco.languages.registerCompletionItemProvider(
     'sol',
     {
-      provideCompletionItems: (model, position) => {
+      provideCompletionItems: (model: editor.ITextModel, position: IPosition) => {
         const wordInfo = model.getWordUntilPosition(position)
         const word = wordInfo.word.toLowerCase()
         const range = {
@@ -307,7 +307,7 @@ export function addSolidityABIIntellisense(monaco: Monaco, abi: any[]) {
   // Add hover provider
   console.log('registering hover provider')
   const hoverProvider = monaco.languages.registerHoverProvider('sol', {
-    provideHover: (model, position) => {
+    provideHover: (model: editor.ITextModel, position: IPosition) => {
       const word = model.getWordAtPosition(position)
       if (!word) return null
       const matchingItem = abi.find((item) => item.name === word.word)
