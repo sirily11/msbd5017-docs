@@ -137,11 +137,11 @@ export default function typographyStyles({ theme }: any) {
           maxWidth: 'none',
           marginLeft: `calc(-1 * ${theme('spacing.4')})`,
           marginRight: `calc(-1 * ${theme('spacing.4')})`,
-          '@screen sm': {
+          '@media (min-width: 640px)': {
             marginLeft: `calc(-1 * ${theme('spacing.6')})`,
             marginRight: `calc(-1 * ${theme('spacing.6')})`,
           },
-          '@screen lg': {
+          '@media (min-width: 1024px)': {
             marginLeft: `calc(-1 * ${theme('spacing.8')})`,
             marginRight: `calc(-1 * ${theme('spacing.8')})`,
           },
