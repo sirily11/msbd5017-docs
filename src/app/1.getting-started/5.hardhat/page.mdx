@@ -26,9 +26,8 @@ import { Terminal } from '@/components/shared/tutorial/terminal'
 In this tutorial, you'll learn how to use **Hardhat** to compile, test, and
 deploy smart contracts. Before getting started, ensure that you have
 [Node.js](https://nodejs.org/en) installed on your local machine, along with a
-code editor like **VSCode**. To have a better performance, we also use
-[pnpm](https://pnpm.io) for package management. However, a faster alternative
-like `bun` is also welcome.
+code editor like **VSCode**. For better performance, we use
+[bun](https://bun.sh) as our package manager.
 
 > **Note:** If you are on `Windows`, you may want to use `WSL` or `Git Bash` to run the commands.
 
@@ -47,7 +46,7 @@ like `bun` is also welcome.
     <Step outputId="2">
       Initialize a new Node.js project with a `package.json` file in it <br />
       ```bash
-      pnpm init
+      bun init -y
       ```
     </Step>
     <Step>
@@ -58,15 +57,13 @@ like `bun` is also welcome.
     <Step>In `package.json` file, you will see the following content:</Step>
     <Step outputId="name">`name`: The name of the project.</Step>
     <Step outputId="scripts">
-      `scripts`: A set of scripts that can be run using `pnpm run {script - name}`
+      `scripts`: A set of scripts that can be run using `bun run {script-name}`
     </Step>
 
     <Step>
       In your termainal, run the following command to install Hardhat <br />
       ```bash
-      pnpm add @nomicfoundation/hardhat-toolbox hardhat @nomicfoundation/hardhat-chai-matchers
-      @nomicfoundation/hardhat-ethers @nomicfoundation/hardhat-ignition @openzeppelin/contracts dayjs dotenv ethers
-      solidity-coverage chai@4.4.1 @types/chai
+      bun add @nomicfoundation/hardhat-toolbox hardhat @nomicfoundation/hardhat-chai-matchers @nomicfoundation/hardhat-ethers @nomicfoundation/hardhat-ignition @openzeppelin/contracts dayjs dotenv ethers solidity-coverage chai@4.4.1 @types/chai
       ```
     </Step>
     <Step outputId={`node_modules`}>
@@ -121,7 +118,7 @@ like `bun` is also welcome.
     <Step outputId={"compile-output"}>
       Run the following command to compile the contract <br />
       ```bash
-      pnpm run compile
+      bun run compile
       ```
     </Step>
     <Step>
@@ -166,7 +163,7 @@ like `bun` is also welcome.
     <Step outputId={"test-result"}>
       You can run the test by running the following command <br />
       ```bash
-      pnpm run test
+      bun run test
       ```
     </Step>
   </Steps>
@@ -373,7 +370,7 @@ like `bun` is also welcome.
     <Output id="compile-output">
       <Terminal
         lines={[
-          'pnpm run compile',
+          'bun run compile',
           'hardhat compile',
           'Generating typings for: 1 artifacts in dir: typechain-types for target: ethers-v6',
           'Successfully generated 6 typings!',
