@@ -137,11 +137,11 @@ export default function typographyStyles({ theme }: any) {
           maxWidth: 'none',
           marginLeft: `calc(-1 * ${theme('spacing.4')})`,
           marginRight: `calc(-1 * ${theme('spacing.4')})`,
-          '@media (min-width: 640px)': {
+          [`@media (min-width: ${theme('screens.sm')})`]: {
             marginLeft: `calc(-1 * ${theme('spacing.6')})`,
             marginRight: `calc(-1 * ${theme('spacing.6')})`,
           },
-          '@media (min-width: 1024px)': {
+          [`@media (min-width: ${theme('screens.lg')})`]: {
             marginLeft: `calc(-1 * ${theme('spacing.8')})`,
             marginRight: `calc(-1 * ${theme('spacing.8')})`,
           },
