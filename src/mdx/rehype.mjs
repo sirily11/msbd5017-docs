@@ -40,6 +40,24 @@ function escapeHtml(str) {
     .replace(/"/g, '&quot;')
 }
 
+const validCssColor = /^(?:var\(--[\w-]+\)|#[\da-fA-F]{3,8}|[\w]+)$/
+
+function renderToken(token) {
+  let style = ''
+  if (token.color && validCssColor.test(token.color)) {
+    style += `color:${token.color}`
+  }
+  if (token.fontStyle) {
+    if (token.fontStyle & 1) style += ';font-style:italic'
+    if (token.fontStyle & 2) style += ';font-weight:bold'
+    if (token.fontStyle & 4) style += ';text-decoration:underline'
+  }
+  if (style) {
+    return `<span style="${style}">${escapeHtml(token.content)}</span>`
+  }
+  return `<span>${escapeHtml(token.content)}</span>`
+}
+
 function rehypeShiki() {
   return async (tree) => {
     highlighter =
@@ -65,7 +83,7 @@ function rehypeShiki() {
           textNode.value = tokens
             .map(
               (line) =>
-                `<span>${line.map((token) => `<span style="color:${token.color}">${escapeHtml(token.content)}</span>`).join('')}</span>`,
+                `<span>${line.map(renderToken).join('')}</span>`,
             )
             .join('\n')
         }
