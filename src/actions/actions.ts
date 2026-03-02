@@ -2,7 +2,6 @@
 import { CompilerOutput } from '@/lib/interfaces'
 import { ethers } from 'ethers'
 import { cookies } from 'next/headers'
-//@ts-expect-error
 import solc from 'solc'
 import fs from 'fs'
 import path from 'path'

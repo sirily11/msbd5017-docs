@@ -1,7 +1,11 @@
 {
   "compilerOptions": {
     "target": "ES2023",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -12,7 +16,7 @@
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "jsx": "preserve",
+    "jsx": "react-jsx",
     "incremental": true,
     "plugins": [
       {
@@ -20,7 +24,9 @@
       }
     ],
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": [
+        "./src/*"
+      ]
     }
   },
   "include": [
@@ -29,7 +35,12 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     "src/mdx/mdx-menu-plugin.mjs",
-    "src/mdx/mdx-menu-plugin.spec.ts"
-, "src/app/getting-started/challenge2/page.mdx", "src/app/1.getting-started/5.hardhat/page.mdx"  ],
-  "exclude": ["node_modules"]
+    "src/mdx/mdx-menu-plugin.spec.ts",
+    "src/app/getting-started/challenge2/page.mdx",
+    "src/app/1.getting-started/5.hardhat/page.mdx",
+    ".next/dev/types/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }
