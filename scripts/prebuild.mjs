@@ -1,6 +1,7 @@
 import * as fs from 'fs'
 import * as path from 'path'
 import * as crypto from 'crypto'
+import * as url from 'url'
 import matter from 'gray-matter'
 import { slugifyWithCounter } from '@sindresorhus/slugify'
 import glob from 'fast-glob'
@@ -10,7 +11,8 @@ import remarkMdx from 'remark-mdx'
 import { filter } from 'unist-util-filter'
 import { SKIP, visit } from 'unist-util-visit'
 
-const rootDir = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..')
+const __filename = url.fileURLToPath(import.meta.url)
+const rootDir = path.resolve(path.dirname(__filename), '..')
 
 // ── Navigation Generation (from MDXMenuPlugin) ──
 
@@ -111,7 +113,6 @@ function excludeObjectExpressions(tree) {
 function extractSections() {
   return (tree, { sections }) => {
     const slugify = slugifyWithCounter()
-    slugify.reset()
 
     visit(tree, (node) => {
       if (node.type === 'heading' || node.type === 'paragraph') {
