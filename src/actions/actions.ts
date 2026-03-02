@@ -8,6 +8,13 @@ import path from 'path'
 
 const SessionKey = 'session'
 
+const cookieOptions = {
+  httpOnly: true,
+  secure: process.env.NODE_ENV === 'production',
+  sameSite: 'lax' as const,
+  path: '/',
+}
+
 export async function compile(
   sourceCode: string,
 ): Promise<CompilerOutput | { error: string }> {
@@ -99,7 +106,7 @@ export async function session() {
 }
 
 export async function signOut() {
-  ;(await cookies()).delete(SessionKey)
+  ;(await cookies()).delete({ name: SessionKey, ...cookieOptions })
 }
 
 export async function signIn(
@@ -115,6 +122,7 @@ export async function signIn(
   }
 
   ;(await cookies()).set(walletAddress, JSON.stringify({ isAuth: true }), {
+    ...cookieOptions,
     maxAge: 60, // 1 minute
   })
   return {}
@@ -129,8 +137,9 @@ export async function storeSession(walletAddress: string, session: any) {
   }
 
   const cookie = await cookies()
-  cookie.delete(walletAddress)
+  cookie.delete({ name: walletAddress, ...cookieOptions })
   cookie.set(SessionKey, JSON.stringify(session), {
+    ...cookieOptions,
     maxAge: 60 * 60 * 24 * 7, // 1 week
   })
   return {}
