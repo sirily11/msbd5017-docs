@@ -106,6 +106,7 @@ export async function deployContract(
     types: any[]
     values: unknown[]
   },
+  gasLimit?: number,
 ): Promise<Address> {
   // Contracts are deployed by sending their deployment bytecode to the address 0
   // The contract params should be abi-encoded and appended to the deployment bytecode.
@@ -114,6 +115,7 @@ export async function deployContract(
   const txData = {
     data,
     nonce: await getAccountNonce(vm, senderPrivateKey),
+    ...(gasLimit ? { gasLimit } : {}),
   }
 
   const tx = LegacyTransaction.fromTxData(
