@@ -3,8 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --webpack",
-    "build": "next build --webpack",
+    "prebuild": "node scripts/prebuild.mjs",
+    "dev": "node scripts/prebuild.mjs && next dev --webpack",
+    "build": "node scripts/prebuild.mjs && next build --webpack",
     "start": "next start",
     "lint": "next lint",
     "test": "jest"
