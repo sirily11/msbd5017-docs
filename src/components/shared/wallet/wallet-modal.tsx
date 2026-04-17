@@ -46,17 +46,15 @@ function WalletItem({
   const onSignIn = useCallback(
     async (provider: AvailableProvider) => {
       setIsLoading(true)
-      await sdk
-        .signIn({
+      try {
+        await sdk.signIn({
           provider,
-          network: chainlabTestnet,
           callbacks: {
             onSignedIn: async (walletAddress, provider, session) => {
               const { error } = await storeSession(walletAddress, session)
               if (error) {
                 throw new Error(error)
               }
-              window.location.reload()
             },
             getSignInData: async (address, provider) => {
               const message = 'Sign In to MSBD 5017 website'
@@ -71,12 +69,15 @@ function WalletItem({
             },
           },
         })
-        .catch((e) => {
-          alert(e.message)
+        await sdk.switchToNetwork(chainlabTestnet).catch((err) => {
+          console.error('Failed to switch to ChainLab Testnet:', err)
         })
-        .finally(() => {
-          setIsLoading(false)
-        })
+        window.location.reload()
+      } catch (e: any) {
+        alert(e.message)
+      } finally {
+        setIsLoading(false)
+      }
     },
     [sdk],
   )
@@ -181,7 +182,7 @@ export function ConnectWalletModal({ closeModal, isSignedIn }: Props) {
               Connect Wallet
             </h1>
             <p className="mb-8 text-center text-sm leading-relaxed text-gray-500 dark:text-white/50">
-              Choose a wallet to sign in to Chainlab
+              Choose a wallet to sign in to ChainLab
             </p>
             <div className="w-full space-y-3">
               {sdk?.walletProviders
